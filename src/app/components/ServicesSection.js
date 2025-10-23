@@ -75,9 +75,8 @@ const ServicesSection = () => {
                 <Image
                   src={service.imageSrc}
                   alt={service.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-700 ease-in-out group-hover:scale-110"
+                  fill
+                  className="transition-transform duration-700 ease-in-out group-hover:scale-110 object-cover"
                 />
                 <div className="absolute inset-0 bg-[#C87A5E]/20 group-hover:bg-transparent transition-all duration-700"></div>
               </div>
