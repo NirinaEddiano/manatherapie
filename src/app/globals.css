@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.swiper-pagination-bullet {
+  background-color: #ffffff !important;
+  opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #C87A5E !important;
+  opacity: 1 !important;
+}
+
+.marquee-container {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track-left, .marquee-track-right {
+  display: flex;
+  width: max-content;
+}
+
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track-left {
+  animation: scrollLeft 300s linear infinite;
+}
+
+@keyframes scrollRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.marquee-track-right {
+  animation: scrollRight 280s linear infinite;
+}
+
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+.animate-slowZoom {
+  animation: slowZoom 20s ease-in-out infinite alternate;
+}
+
+
+.clip-wave-left {
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+@media (min-width: 1024px) { 
+  .clip-wave-left {
+    clip-path: path("M 100 0 L 1000 0 L 1000 1000 L 0 1000 C 150 750, 150 250, 0 0 Z");
+  }
+}
+
+
+.clip-wave-right {
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+}
+
+@media (min-width: 1024px) {
+  .clip-wave-right {
+    clip-path: path("M 0 0 L 900 0 C 750 250, 750 750, 900 1000 L 0 1000 Z");
+  }
+}
+
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+.swiper:hover {
+  .swiper-wrapper {
+    animation-play-state: paused !important;
+  }
+}
+
+.gallery-marquee-track-left, .gallery-marquee-track-right {
+  display: flex;
+  width: max-content;
+}
+
+/* Animation pour le défilement de droite à gauche */
+@keyframes galleryScrollLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.gallery-marquee-track-left {
+  animation: galleryScrollLeft 60s linear infinite;
+}
+
+/* Animation pour le défilement de gauche à droite */
+@keyframes galleryScrollRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.gallery-marquee-track-right {
+  animation: galleryScrollRight 60s linear infinite;
+}
+
+/* Quand on survole le conteneur, on met en pause l'animation */
+.gallery-marquee-container:hover .gallery-marquee-track-left,
+.gallery-marquee-container:hover .gallery-marquee-track-right {
+  animation-play-state: paused;
+}
+
+/* src/app/globals.css */
+
+/* ... le reste de votre CSS ... */
+
+/* --- Style pour le Carrousel Cinématique --- */
+.cinematic-swiper .swiper-slide {
+  transition: transform 0.5s ease;
+}
+
+.cinematic-swiper .swiper-slide-prev,
+.cinematic-swiper .swiper-slide-next {
+  opacity: 0.4;
+  transform: scale(0.8);
+}
+
+.cinematic-swiper .swiper-pagination-bullet {
+  background-color: #C87A5E !important;
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 0.5 !important;
+}
+
+.cinematic-swiper .swiper-pagination-bullet-active {
+  opacity: 1 !important;
+}
+
+.marquee-container-coaching {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.marquee-track-coaching {
+  display: flex;
+  width: max-content;
+  animation: scrollLeft 90s linear infinite; /* On réutilise l'animation scrollLeft */
+}
+
+.marquee-container-coaching:hover .marquee-track-coaching {
+  animation-play-state: paused;
+}
+
+.clip-auth-wave {
+  clip-path: ellipse(80% 100% at 0% 50%);
+}
+
+.form-group {
+    position: relative;
+}
+.form-input {
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+    background-color: white;
+}
+/* Quand on focus, la bordure prend la couleur du thème */
+.form-input:focus {
+    border-color: #C87A5E;
+    box-shadow: 0 0 0 2px rgba(200, 122, 94, 0.2);
+}
+.form-label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: all 0.2s ease;
+    color: #9ca3af;
+    background-color: white;
+    padding: 0 0.25rem;
+}
+/* Quand le champ est focus ou a du contenu, le label flotte */
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: 0;
+    font-size: 0.75rem;
+    color: #C87A5E;
+}
+
+/* Effet de brillance pour le bouton principal */
+.shine-button {
+    position: relative;
+    overflow: hidden;
+}
+.shine-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+.shine-button:hover::before {
+    left: 100%;
+}
