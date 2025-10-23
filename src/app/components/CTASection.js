@@ -45,9 +45,8 @@ const CTASection = () => {
       <Image
         src="/images/cta-background.jpg"
         alt="Texture de fond apaisante"
-        layout="fill"
-        objectFit="cover"
-        className="opacity-20" 
+        fill
+        className="opacity-20 object-cover" 
       />
 
       <div className="absolute inset-0">
