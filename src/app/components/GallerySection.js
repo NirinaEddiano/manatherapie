@@ -62,7 +62,7 @@ const HorizontalScroller = ({ images, direction, title }) => {
       >
         {images.map((src, i) => (
           <div key={`${title}-${i}`} className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
-            <Image src={src} alt={`Galerie ${title} image ${i}`} layout="fill" objectFit="cover" className="rounded-xl"/>
+            <Image src={src} alt={`Galerie ${title} image ${i}`} fill className="rounded-xl object-cover"/>
           </div>
         ))}
       </motion.div>
