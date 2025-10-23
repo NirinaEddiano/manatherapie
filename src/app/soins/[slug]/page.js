@@ -28,7 +28,7 @@ const QuoteSection = ({ quote }) => {
     return (
         <section ref={targetRef} className="relative h-[60vh] overflow-hidden">
             <motion.div style={{ y }} className="absolute inset-0">
-                 <Image src={quote.bgImage} alt="Texture de fond" layout="fill" objectFit="cover" className="opacity-30"/>
+                 <Image src={quote.bgImage} alt="Texture de fond" fill className="opacity-30 object-cover"/>
             </motion.div>
              <div className="absolute inset-0 bg-black/30"></div>
              <div className="relative h-full flex items-center justify-center">
@@ -80,7 +80,7 @@ export default function SoinDetailPage({ params }) {
                         <p className="text-lg text-gray-600 leading-relaxed">{service.introText}</p>
                     </motion.div>
                     <motion.div className="relative h-96 rounded-2xl overflow-hidden" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-                        <Image src={service.gallery[0]} alt={service.title} layout="fill" objectFit="cover" />
+                        <Image src={service.gallery[0]} alt={service.title} fill className="object-cover"/>
                     </motion.div>
                 </div>
             </section>
@@ -149,7 +149,7 @@ export default function SoinDetailPage({ params }) {
                             transition={{ duration: 0.8 }}
                          >
                             <div className={`relative h-80 rounded-2xl overflow-hidden ${index % 2 === 0 ? 'lg:order-2' : ''}`}>
-                                <Image src={step.image} alt={step.title} layout="fill" objectFit="cover"/>
+                                <Image src={step.image} alt={step.title} fill className="object-cover"/>
                             </div>
                             <div className="flex items-start gap-4">
                                 <div className="text-4xl font-bold text-[#C87A5E]/30">0{index + 1}</div>
