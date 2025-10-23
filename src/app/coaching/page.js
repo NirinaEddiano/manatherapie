@@ -9,6 +9,7 @@ import CoachingTestimonials from '@/app/components/CoachingTestimonials';
 import CoachingFAQSection from '@/app/components/CoachingFAQSection'; 
 import TransformationSection from '@/app/components/TransformationSection'; 
 import FloatingCtaButton from '@/app/components/FloatingCtaButton';
+import ContactCTA from '@/app/components/ContactCTA';
 import { Check, Video, MapPin, ArrowRight, Star, Users, Target, Clock } from 'lucide-react';
 
 // --- Données enrichies pour la page ---
@@ -151,7 +152,10 @@ export default function CoachingPage() {
                 <CoachingTestimonials testimonials={testimonials} />
             </section>
 
+           
              <CoachingFAQSection />
+
+             <ContactCTA />
 
              <FloatingCtaButton 
                 href="/contact"

@@ -46,7 +46,23 @@ export const servicesDetails = {
     { title: "Le Soin sur Mesure", description: "À la suite du bilan, un soin entièrement personnalisé est créé pour répondre spécifiquement aux besoins de votre peau.[2] Ce soin sur mesure peut être purifiant, hydratant ou encore régénérant, grâce à des produits hautement concentrés en actifs pour un résultat visible.", image: "/images/process-soin.jpg" },
     { title: "Intégration & Repos", description: "Après le soin, un temps de repos est nécessaire pour permettre à votre corps d'intégrer pleinement les bienfaits du traitement. Cette phase de relaxation favorise une régénération en profondeur.", image: "/images/process-repos.jpg" },
     { title: "Conseils Personnalisés", description: "Pour prolonger les bénéfices du soin, des conseils personnalisés vous sont proposés.[4] Il est recommandé de suivre une routine de soins à domicile adaptée pour maintenir les résultats obtenus et prendre soin de votre peau au quotidien.", image: "/images/process-conseils.jpg" }
-]
+],
+ subServices: [
+            {
+                id: 'special-dos',
+                title: "Massage Spécial Dos",
+                text: "Un protocole de 60 minutes entièrement dédié à la libération des tensions de la nuque, des trapèzes, des épaules et de la région lombaire. Idéal pour les personnes travaillant en position assise.",
+                price: "85€",
+                image: "/images/sub-massage-dos.jpg"
+            },
+            {
+                id: 'deep-tissue',
+                title: "Massage 'Deep Tissue'",
+                text: "Un massage profond et puissant qui vise les couches profondes des muscles et des fascias. Parfait pour les sportifs et pour soulager les douleurs chroniques.",
+                price: "95€",
+                image: "/images/sub-massage-sportif.jpg"
+            }
+        ]
     },
     drainage: {
         slug: 'drainage',
@@ -86,6 +102,22 @@ export const servicesDetails = {
             '/images/gallery-drainage-3.jpg',
             '/images/process-drainage-bilan.jpg',
             '/images/process-drainage-conseils.jpg'
+        ],
+        subServices: [
+            {
+                id: 'femme-enceinte',
+                title: "Lympho-Drainage Femme Enceinte",
+                text: "Adapté à partir du 4ème mois de grossesse, ce soin ultra-doux aide à lutter contre la rétention d'eau et la sensation de jambes lourdes, tout en apportant une profonde relaxation.",
+                price: "90€",
+                image: "/images/sub-drainage-enceinte.jpg"
+            },
+            {
+                id: 'post-operatoire',
+                title: "Lympho-Drainage Post-Opératoire",
+                text: "Sur avis médical uniquement, ce soin est essentiel pour réduire les œdèmes, accélérer la cicatrisation et améliorer le confort après une intervention chirurgicale.",
+                price: "100€",
+                image: "/images/sub-drainage-postop.jpg"
+            }
         ]
     },
     // --- NOUVEAUX SERVICES AJOUTÉS ---
@@ -127,7 +159,30 @@ export const servicesDetails = {
             '/images/gallery-madero-3.jpg',
             '/images/process-madero-bilan.jpg',
             '/images/process-madero-conseils.jpg'
-        ]
+        ],
+        subServices: [
+    {
+        id: 'jambes-fessiers',
+        title: "Cure Madero 'Jambes & Fessiers'",
+        text: "Un protocole intensif centré sur le bas du corps pour casser la cellulite, drainer les toxines et remodeler en profondeur les cuisses et les fesses. Idéal pour retrouver une peau lisse et des jambes légères.",
+        price: "À partir de 80€/séance",
+        image: "/images/sub-madero-jambes.jpg"
+    },
+    {
+        id: 'ventre-taille',
+        title: "Soin Madero 'Ventre & Taille'",
+        text: "Ce soin ciblé utilise des instruments spécifiques pour déloger les graisses abdominales, affiner la taille et améliorer le transit. Il favorise un ventre plus plat et une meilleure digestion.",
+        price: "À partir de 70€/séance",
+        image: "/images/sub-madero-ventre.jpg"
+    },
+    {
+        id: 'corps-complet',
+        title: "Remodelage Madero 'Corps Complet'",
+        text: "L'expérience de maderothérapie ultime. Un soin global qui travaille l'ensemble de la silhouette (jambes, fessiers, taille, bras) pour une transformation harmonieuse et complète du corps.",
+        price: "À partir de 120€/séance",
+        image: "/images/sub-madero-corps.jpg"
+    }
+]
 
     },
     specialises: {
@@ -168,6 +223,29 @@ export const servicesDetails = {
             '/images/gallery-specialise-3.jpg',
             '/images/process-specialise-bilan.jpg',
             '/images/process-specialise-suivi.jpg'
-        ]
+        ],
+        subServices: [
+    {
+        id: 'endometriose',
+        title: "Accompagnement Douleurs Chroniques (Endométriose, Fibromyalgie...)",
+        text: "Un protocole de soin entièrement personnalisé (basé sur des techniques viscérales, de relaxation et de drainage doux) pour aider à gérer la douleur, réduire l'inflammation et améliorer la qualité de vie au quotidien. Se fait en complément d'un suivi médical.",
+        price: "Sur devis",
+        image: "/images/sub-specialise-douleurs.jpg"
+    },
+    {
+        id: 'sportif',
+        title: "Soin 'Récupération du Sportif'",
+        text: "Un soin profond combinant 'deep tissue', étirements passifs et techniques de relâchement myofascial pour accélérer la récupération, prévenir les blessures et améliorer la performance athlétique.",
+        price: "À partir de 95€/séance",
+        image: "/images/sub-specialise-recup.jpg"
+    },
+    {
+        id: 'post-partum',
+        title: "Soin 'Récupération Post-Partum'",
+        text: "Un soin cocon pour aider le corps à se réapproprier après l'accouchement. Il combine un drainage doux pour réduire l'œdème, un massage pour soulager les tensions du dos et un travail énergétique pour retrouver son centre.",
+        price: "À partir de 90€/séance",
+        image: "/images/sub-specialise-postpartum.jpg" 
+    }
+]
     },
 };

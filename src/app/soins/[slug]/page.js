@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { servicesDetails } from '../servicesData';
 import PageHero from '@/app/components/PageHero';
 import BookingBar from '@/app/components/BookingBar';
+import ContactCTA from '@/app/components/ContactCTA';
+import ServiceFAQ from '@/app/components/ServiceFAQ';
 import { CheckCircle, ArrowRight, Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
@@ -103,6 +105,52 @@ export default function SoinDetailPage({ params }) {
                     </div>
                 </div>
             </section>
+            
+
+{service.subServices && service.subServices.length > 0 && (
+    <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-bold text-[#1f2937] mb-12 text-center">Nos Protocoles Spécifiques en {service.title}</h2>
+            <div className="space-y-8 max-w-4xl mx-auto">
+                {service.subServices.map(sub => (
+                    <motion.div 
+                        key={sub.id} 
+                        id={sub.id}
+                        className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <div className="relative grid grid-cols-1 md:grid-cols-3 items-center min-h-[180px]">
+                            {/* --- Colonne de l'image (à droite) --- */}
+                            <div className="md:col-span-1 h-48 md:h-full relative overflow-hidden">
+                                <Image 
+                                    src={sub.image} // Assurez-vous d'ajouter sub.image dans vos données
+                                    alt={sub.title} 
+                                    fill 
+                                    className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-black/10"></div>
+                            </div>
+                            
+                            {/* --- Colonne du texte (à gauche) --- */}
+                            <div className="md:col-span-2 p-8 bg-[#FFF7ED]">
+                                <h3 className="text-2xl font-bold text-[#1f2937] mb-2">{sub.title}</h3>
+                                <p className="text-gray-600 mb-4">{sub.text}</p>
+                                <div className="flex items-end justify-between">
+                                    <p className="text-3xl font-bold text-[#1f2937]">{sub.price}</p>
+                                    <Link href="/contact" className="inline-block bg-[#C87A5E] text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1f2937] transition-colors">
+                                        Réserver
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+        </div>
+    </section>
+)}
 
             <section className="relative py-40 bg-gray-800">
                  <Image src={service.quote.bgImage} alt="Texture de fond" layout="fill" objectFit="cover" className="opacity-10"/>
@@ -228,6 +276,10 @@ export default function SoinDetailPage({ params }) {
                     </motion.div>
                 </div>
             </section>
+
+            <ServiceFAQ /> 
+
+            <ContactCTA />
             
             {/* CTA Flottant pour la réservation */}
             <motion.div 

@@ -9,6 +9,7 @@ import KeyServicesSection from "./components/KeyServicesSection";
 import TestimonialsSection from "./components/TestimonialsSection"; 
 import BlogSection from "./components/BlogSection"; 
 import CTASection from "./components/CTASection";
+import SignatureSoins from './components/SignatureSoins';
 
 export const metadata = {
   title: "Manatherapie - Accueil",
@@ -21,6 +22,7 @@ export default function Home() {
       <HeroCarousel />
       <AboutSection /> 
       <ServicesSection />
+       <SignatureSoins />
       <KeyServicesSection />
       <AcademyTeaser /> 
       <CoachingTeaser />
