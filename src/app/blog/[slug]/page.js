@@ -24,7 +24,7 @@ export default function BlogPostPage({ params }) {
     return (
         <main>
             {/* --- Hero de l'Article --- */}
-            <section className="relative h-[60vh] min-h-[400px] text-white ">
+            <section className="relative z-[2] h-[60vh] min-h-[400px] text-white ">
                 <Image src={post.image} alt={post.title} fill className="object-cover "/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/80 to-black/90"></div>
 
