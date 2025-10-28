@@ -7,7 +7,7 @@ import Image from 'next/image';
 // Le composant accepte maintenant des props pour le titre, le texte et l'image
 const PageHero = ({ title, text, imageSrc }) => {
   return (
-    <section className="relative h-[50vh] min-h-[350px] w-full flex items-center justify-center text-center text-white overflow-hidden">
+    <section className="relative z-[2] h-[50vh] min-h-[350px] w-full flex items-center justify-center text-center text-white overflow-hidden">
       <div className="absolute inset-0 animate-slowZoom">
         <Image
           src={imageSrc} // Utilise la prop imageSrc

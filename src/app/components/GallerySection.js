@@ -52,7 +52,7 @@ const HorizontalScroller = ({ images, direction, title }) => {
   return (
     <motion.div 
       ref={targetRef} 
-      className="relative h-[300px] md:h-[400px] group"
+      className="relative z-[20] h-[300px] md:h-[400px] group"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >

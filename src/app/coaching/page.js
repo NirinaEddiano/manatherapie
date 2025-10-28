@@ -56,7 +56,7 @@ export default function CoachingPage() {
                     <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">Le coaching est un levier puissant si vous êtes dans l'une de ces situations :</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {forWhoItems.map((item, i) => (
-                            <motion.div key={i} className="bg-[#FFF7ED] p-6 rounded-2xl text-center border-t-4 border-[#C87A5E]" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+                            <motion.div key={i} className="relative z-[2] bg-[#FADDAA] p-6 rounded-2xl text-center border-t-4 border-[#af4d30]" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
                                 <h3 className="text-xl font-bold text-[#1f2937] mb-2">{item.title}</h3>
                                 <p className="text-gray-700">{item.text}</p>
                             </motion.div>
@@ -72,7 +72,7 @@ export default function CoachingPage() {
                         initial={{ opacity: 0, scale: 0.9 }} 
                         whileInView={{ opacity: 1, scale: 1 }} 
                         viewport={{ once: true }} 
-                        className="relative w-full aspect-square max-w-md mx-auto rounded-full overflow-hidden"
+                        className="relative z-[2] w-full aspect-square max-w-md mx-auto rounded-full overflow-hidden"
                     >
                         <Image src="/images/approach-image.jpg" alt="Portrait de la coach" fill className="object-cover"/>
                     </motion.div>
@@ -80,9 +80,9 @@ export default function CoachingPage() {
                         <h2 className="text-3xl md:text-4xl font-bold text-[#1f2937]">Mon Approche : Un Catalyseur de Changement</h2>
                         <p>Mon rôle n'est pas de vous donner des réponses, mais de vous poser les bonnes questions. Celles qui ouvrent des portes, qui créent des déclics et qui vous mettent en mouvement. Je suis votre partenaire de réflexion, votre miroir bienveillant et votre booster de motivation.</p>
                         <ul className="space-y-3">
-                            <li className="flex gap-3"><Users className="text-[#C87A5E] flex-shrink-0"/><span><strong className="text-[#1f2937]">Co-création :</strong> Nous travaillons ensemble. Vous êtes l'expert(e) de votre vie, je suis l'experte du processus.</span></li>
-                            <li className="flex gap-3"><Target className="text-[#C87A5E] flex-shrink-0"/><span><strong className="text-[#1f2937]">Orienté Action :</strong> Chaque séance se termine par des actions concrètes à mettre en place. Pas de blabla, que du résultat.</span></li>
-                            <li className="flex gap-3"><Clock className="text-[#C87A5E] flex-shrink-0"/><span><strong className="text-[#1f2937]">Cadre Défini :</strong> Un accompagnement dure en moyenne 3 à 6 mois. C'est un sprint, pas un marathon, pour un maximum d'impact.</span></li>
+                            <li className="flex gap-3"><Users className="text-[#af4d30] flex-shrink-0"/><span><strong className="text-[#1f2937]">Co-création :</strong> Nous travaillons ensemble. Vous êtes l'expert(e) de votre vie, je suis l'experte du processus.</span></li>
+                            <li className="flex gap-3"><Target className="text-[#af4d30] flex-shrink-0"/><span><strong className="text-[#1f2937]">Orienté Action :</strong> Chaque séance se termine par des actions concrètes à mettre en place. Pas de blabla, que du résultat.</span></li>
+                            <li className="flex gap-3"><Clock className="text-[#af4d30] flex-shrink-0"/><span><strong className="text-[#1f2937]">Cadre Défini :</strong> Un accompagnement dure en moyenne 3 à 6 mois. C'est un sprint, pas un marathon, pour un maximum d'impact.</span></li>
                         </ul>
                     </div>
                 </div>
@@ -95,10 +95,10 @@ export default function CoachingPage() {
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1f2937] mb-16">Un Processus en 4 Étapes Claires</h2>
                     <div className="relative max-w-4xl mx-auto">
-                        <div className="absolute top-8 left-8 bottom-8 w-1 bg-[#C87A5E]/20 rounded-full"></div>
+                        <div className="absolute top-8 left-8 bottom-8 w-1 bg-[#af4d30] rounded-full"></div>
                         {processSteps.map((step, i) => (
-                            <motion.div key={i} className="relative pl-20 pb-12" initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }}>
-                                <div className="absolute top-0 left-0 w-16 h-16 flex items-center justify-center rounded-full bg-[#C87A5E] text-white text-2xl font-bold border-8 border-white">
+                            <motion.div key={i} className="relative z-[2] pl-20 pb-12" initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }}>
+                                <div className="absolute top-0 left-0 w-16 h-16 flex items-center justify-center rounded-full bg-[#af4d30] text-white text-2xl font-bold border-8 border-white">
                                     {step.num}
                                 </div>
                                 <h3 className="text-2xl font-bold text-[#1f2937] mb-2">{step.title}</h3>
@@ -110,32 +110,32 @@ export default function CoachingPage() {
             </section>
 
             {/* --- Section 4: Les Formules (CTA clair) --- */}
-            <section className="py-24 bg-[#FFF7ED]">
+            <section className="py-24 bg-[#FADDAA]">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1f2937] mb-12">Prêt(e) à passer à l'action ?</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                         {/* Carte En Ligne */}
-                        <motion.div whileHover={{ scale: 1.03 }} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                        <motion.div whileHover={{ scale: 1.03 }} className="relative z-[2] bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
                             <div className="p-8">
-                                <Video className="text-[#C87A5E] mb-4" size={40}/>
+                                <Video className="text-[#af4d30] mb-4" size={40}/>
                                 <h3 className="text-2xl font-bold mb-2">Coaching en Ligne</h3>
                                 <p className="text-gray-600 mb-6 flex-grow">La flexibilité du digital, la profondeur de l'échange. Où que vous soyez, nous avançons ensemble via Zoom ou Meet.</p>
                             </div>
                             <div className="mt-auto p-8 pt-0">
-                                <Link href="/contact" className="block w-full text-center bg-[#1f2937] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#C87A5E] transition-colors">
+                                <Link href="/contact" className="block w-full text-center bg-[#1f2937] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#af4d30] transition-colors">
                                     Réserver ma séance découverte (En Ligne)
                                 </Link>
                             </div>
                         </motion.div>
                         {/* Carte Présentiel */}
-                         <motion.div whileHover={{ scale: 1.03 }} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                         <motion.div whileHover={{ scale: 1.03 }} className="relative z-[2] bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
                             <div className="p-8">
-                                <MapPin className="text-[#C87A5E] mb-4" size={40}/>
+                                <MapPin className="text-[#af4d30] mb-4" size={40}/>
                                 <h3 className="text-2xl font-bold mb-2">Coaching en Présentiel</h3>
                                 <p className="text-gray-600 mb-6 flex-grow">La puissance de la rencontre. Retrouvez-moi dans un espace confidentiel pour un travail en profondeur.</p>
                             </div>
                             <div className="mt-auto p-8 pt-0">
-                                <Link href="/contact" className="block w-full text-center bg-[#1f2937] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#C87A5E] transition-colors">
+                                <Link href="/contact" className="block w-full text-center bg-[#1f2937] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#af4d30] transition-colors">
                                     Réserver ma séance découverte (Présentiel)
                                 </Link>
                             </div>

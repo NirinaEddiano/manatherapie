@@ -17,17 +17,17 @@ const CourseCard = ({ course }) => (
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col"
+        className="relative z-[2] bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col"
     >
-        <div className="relative h-48">
+        <div className="relative z-[2] h-48">
             <Image src={course.image} alt={course.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300"/>
-            <div className={`absolute top-3 left-3 px-2 py-1 text-xs font-semibold text-white rounded-full flex items-center gap-1 ${course.type === 'video' ? 'bg-rose-500' : 'bg-sky-500'}`}>
+            <div className={`absolute top-3 left-3 px-2 py-1 text-xs font-semibold text-white rounded-full flex items-center gap-1 ${course.type === 'video' ? 'bg-[#af4d30]' : 'bg-sky-500'}`}>
                 {course.type === 'video' ? <Video size={12}/> : <BookOpen size={12}/>}
                 <span>{course.type === 'video' ? 'Vidéo' : 'Ebook'}</span>
             </div>
         </div>
-        <div className="p-5 flex flex-col flex-grow">
-            <p className="text-sm text-[#C87A5E] font-semibold mb-1">{course.category}</p>
+        <div className=" p-5 flex flex-col flex-grow">
+            <p className="text-sm text-[#af4d30] font-semibold mb-1">{course.category}</p>
             <h3 className="text-lg font-bold text-[#1f2937] mb-2 h-14">{course.title}</h3>
             <div className="flex items-center gap-1 text-sm text-gray-500 mb-4">
                 <span className="font-bold text-amber-500">{course.rating}</span>
@@ -40,7 +40,7 @@ const CourseCard = ({ course }) => (
     <Link href={`/academie/${course.slug}`} className="flex-1 text-center border border-[#1f2937]/20 text-[#1f2937] px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm">
         Détails
     </Link>
-     <button className="group mt-4 flex-1 flex items-center justify-center gap-2 bg-[#1f2937] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#C87A5E] transition-colors text-sm overflow-hidden">
+     <button className="group mt-4 flex-1 flex items-center justify-center gap-2 bg-[#1f2937] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#af4d30] transition-colors text-sm overflow-hidden">
             <ShoppingCart size={16} className="transition-transform duration-300"/>
             <span>Ajouter au panier</span>
         </button>
@@ -74,7 +74,7 @@ export default function AcademyPage() {
             <div className=" bg-[#FFF7ED]"></div>
 
             {/* --- Section Hero de l'Académie --- */}
-             <section className="relative py-24 text-center bg-gray-800 text-white">
+             <section className="relative z-[2] py-24 text-center bg-gray-800 text-white">
                 <Image
                     src="/images/hero-academie-bg.jpg"
                     alt="Apprentissage et bien-être"
@@ -120,7 +120,7 @@ export default function AcademyPage() {
             </section>
 
             {/* --- Grille des cours --- */}
-            <section className="py-16 bg-[#FFF7ED]">
+            <section className="py-16 bg-[#FADDAA]">
                 <div className="container mx-auto px-6">
                     <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         <AnimatePresence>

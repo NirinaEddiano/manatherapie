@@ -13,7 +13,7 @@ const principles = [
 
 const ApproachSection = () => {
   return (
-    <section className="py-24 bg-[#FFF7ED]">
+    <section className="py-24 bg-[#FADDAA]">
       <div className="container mx-auto mt-[-40px] mb-[40px] px-6">
         <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
           <h2 className="text-4xl md:text-5xl font-bold text-[#1f2937] text-center mb-4">Notre Approche du Soin</h2>

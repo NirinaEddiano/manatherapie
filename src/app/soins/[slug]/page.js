@@ -25,21 +25,25 @@ const QuoteSection = ({ quote }) => {
         target: targetRef,
         offset: ['start end', 'end start']
     });
-    const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
+    // On augmente l'amplitude du parallax
+    const y = useTransform(scrollYProgress, [0, 1], ['-25%', '15%']);
 
     return (
-        <section ref={targetRef} className="relative h-[60vh] overflow-hidden">
+        <section ref={targetRef} className="relative z-[2] h-[70vh] min-h-[500px] overflow-hidden">
+            {/* Image avec parallax */}
             <motion.div style={{ y }} className="absolute inset-0">
-                 <Image src={quote.bgImage} alt="Texture de fond" fill className="opacity-30 object-cover"/>
+                 <Image src={quote.bgImage} alt="Texture de fond inspirante" fill className="object-cover opacity-80"/>
             </motion.div>
-             <div className="absolute inset-0 bg-black/30"></div>
+             {/* Dégradé vignette pour la lisibilité */}
+             <div className="absolute inset-0 bg-gradient-radial from-transparent via-black/40 to-black/70"></div>
              <div className="relative h-full flex items-center justify-center">
                 <motion.p 
-                    className="text-3xl md:text-4xl font-serif italic text-white max-w-3xl mx-auto text-center px-6"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
+                    style={{ textShadow: '0px 2px 15px rgba(0,0,0,0.5)' }} // Ombre portée
+                    className="text-4xl md:text-5xl lg:text-6xl font-serif italic text-white max-w-4xl mx-auto text-center px-6 leading-tight"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 1 }}
+                    transition={{ duration: 1, ease: 'easeOut' }}
                 >
                     "{quote.text}"
                 </motion.p>
@@ -58,18 +62,34 @@ export default function SoinDetailPage({ params }) {
             <div className="text-center py-24">
                 <h1 className="text-4xl font-bold">Service non trouvé</h1>
                 <p className="mt-4">Ce service n'existe pas. Veuillez retourner à la page des soins.</p>
-                <Link href="/soins" className="mt-6 inline-block bg-[#C87A5E] text-white px-6 py-2 rounded-full">
+                <Link href="/soins" className="mt-6 inline-block bg-[#E35336] text-white px-6 py-2 rounded-full">
                     Voir tous les soins
                 </Link>
             </div>
         );
     }
 
+     const handleScrollToPricing = (event) => {
+        event.preventDefault(); // Empêche le comportement par défaut du lien
+        const pricingSection = document.getElementById('tarifs-section');
+        if (pricingSection) {
+            pricingSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start' // Aligne le haut de la section avec le haut de la vue
+            });
+        }
+    };
+
+    const mainPrice = service.pricing.options[0]?.price || 'Sur devis';
+
     return (
         <main>
 
-            {service.pricing.price !== "Sur devis" && (
-              <BookingBar price={service.pricing.price} duration={service.pricing.duration} />
+             {mainPrice !== "Sur devis" && (
+              <BookingBar 
+                price={mainPrice} 
+                targetId="tarifs-section"
+              />
             )}
             
             <PageHero title={service.title} text={service.subtitle} imageSrc={service.heroImage} />
@@ -81,22 +101,22 @@ export default function SoinDetailPage({ params }) {
                         <h2 className="text-3xl font-bold text-[#1f2937] mb-6">En quoi consiste ce soin ?</h2>
                         <p className="text-lg text-gray-600 leading-relaxed">{service.introText}</p>
                     </motion.div>
-                    <motion.div className="relative h-96 rounded-2xl overflow-hidden" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+                    <motion.div className="relative z-[2] h-96 rounded-2xl overflow-hidden" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                         <Image src={service.gallery[0]} alt={service.title} fill className="object-cover"/>
                     </motion.div>
                 </div>
             </section>
 
-             <section className="py-24 bg-[#FFF7ED]">
+             <section className="py-24 bg-[#FADDAA]">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-[#1f2937] mb-4">Ce soin est fait pour vous si...</h2>
                     <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">Vous vous reconnaîtrez peut-être dans l'une de ces situations.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                         {service.idealFor.map((item, index) => (
-                            <motion.div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-transparent hover:border-gray-200 hover:shadow-lg transition-all" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+                            <motion.div key={index} className="relative z-[2] bg-white p-6 rounded-2xl shadow-sm border border-transparent hover:border-gray-200 hover:shadow-lg transition-all" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
                                 <div className="flex items-start gap-4">
-                                    <div className="bg-[#C87A5E]/10 p-2 rounded-full">
-                                        <CheckCircle size={24} className="text-[#C87A5E]" />
+                                    <div className="bg-[#af4d30]/10 p-2 rounded-full">
+                                        <CheckCircle size={24} className="text-[#af4d30]" />
                                     </div>
                                     <p className="font-semibold text-gray-800 text-lg mt-1">{item}</p>
                                 </div>
@@ -152,21 +172,9 @@ export default function SoinDetailPage({ params }) {
     </section>
 )}
 
-            <section className="relative py-40 bg-gray-800">
-                 <Image src={service.quote.bgImage} alt="Texture de fond" layout="fill" objectFit="cover" className="opacity-10"/>
-                 <div className="relative container mx-auto px-6 text-center">
-                    <motion.p 
-                        className="text-3xl md:text-4xl font-serif italic text-white max-w-3xl mx-auto"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        "{service.quote.text}"
-                    </motion.p>
-                 </div>
-            </section>
+<QuoteSection quote={service.quote} />
 
+           
 
             {/* Section Bienfaits */}
              <section className="py-30 bg-white">
@@ -174,8 +182,8 @@ export default function SoinDetailPage({ params }) {
                     <h2 className="text-3xl font-bold text-[#1f2937] mb-12">Les Bienfaits Clés</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {service.benefits.map((benefit, index) => (
-                             <motion.div key={index} className="bg-gray-50 p-8 rounded-2xl text-center" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                                <Award className="mx-auto text-[#C87A5E] mb-4" size={40} />
+                             <motion.div key={index} className="relative z-[2] bg-gray-50 p-8 rounded-2xl text-center" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+                                <Award className="mx-auto text-[#af4d30] mb-4" size={40} />
                                 <h3 className="text-lg font-bold text-[#1f2937]">{benefit}</h3>
                             </motion.div>
                         ))}
@@ -196,11 +204,11 @@ export default function SoinDetailPage({ params }) {
                             viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 0.8 }}
                          >
-                            <div className={`relative h-80 rounded-2xl overflow-hidden ${index % 2 === 0 ? 'lg:order-2' : ''}`}>
+                            <div className={`relative z-[2] h-80 rounded-2xl overflow-hidden ${index % 2 === 0 ? 'lg:order-2' : ''}`}>
                                 <Image src={step.image} alt={step.title} fill className="object-cover"/>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="text-4xl font-bold text-[#C87A5E]/30">0{index + 1}</div>
+                                <div className="text-4xl font-bold text-[#af4d30]/50">0{index + 1}</div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-[#1f2937] mb-2">{step.title}</h3>
                                     <p className="text-gray-600">{step.description}</p>
@@ -250,32 +258,46 @@ export default function SoinDetailPage({ params }) {
                 </div>
             </section>
 
-            <section className="py-10 bg-[#FFF7ED]">
-                <div className="container mx-auto px-6">
-                    <motion.div 
-                        className="relative bg-white max-w-4xl mx-auto rounded-2xl shadow-xl overflow-hidden"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1 }}
-                    >
-                        <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                            <div>
-                                <p className="font-semibold text-[#C87A5E] uppercase tracking-wider">Tarif & Durée</p>
-                                <p className="text-6xl font-bold text-[#1f2937] my-3">{service.pricing.price}</p>
-                                <p className="text-xl text-gray-600">~{service.pricing.duration}</p>
-                            </div>
-                            <div className="flex flex-col gap-4">
-                                <p className="text-gray-600">{service.pricing.details}</p>
-                                <Link href="/contact" className="group mt-2 w-full relative inline-flex items-center justify-center bg-[#1f2937] text-white px-8 py-4 rounded-full font-semibold overflow-hidden transition-all duration-300">
-                                    <span className="transition-transform duration-300 group-hover:-translate-x-3">Prendre Rendez-vous</span>
-                                    <div className="absolute right-8 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:right-6"><ArrowRight size={20} /></div>
-                                </Link>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
+            <section id="tarifs-section" className="py-24 bg-[#FADDAA]">
+    <div className="container mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1f2937] mb-4">Choisissez votre parcours</h2>
+            <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">{service.pricing.details}</p>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-end">
+                {service.pricing.options.map((opt, i) => {
+                    const isPopular = service.pricing.options.length > 1 && i === 1; // Le 2ème est populaire
+                    
+                    return (
+                        <motion.div 
+                            key={i}
+                            className={`relative z-[2] bg-white rounded-2xl shadow-lg p-8 text-center border-2 ${isPopular ? 'border-[#E35336]' : 'border-transparent'}`}
+                            whileHover={{ y: -10, scale: 1.02 }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                        >
+                            {isPopular && (
+                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#E35336] text-white px-4 py-1 rounded-full text-sm font-semibold">
+                                    Populaire
+                                </div>
+                            )}
+                            <h3 className="text-xl font-bold text-[#1f2937] mb-2">{opt.name}</h3>
+                            <p className="text-5xl font-extrabold text-[#1f2937] mb-6">{opt.price}</p>
+                            
+                            <Link 
+                                href="/contact" 
+                                className={`w-full block px-6 py-3 rounded-lg font-semibold transition-colors duration-300 ${isPopular ? 'bg-[#af4d30] text-white hover:bg-[#D0482B]' : 'bg-gray-100 text-[#1f2937] hover:bg-gray-200'}`}
+                            >
+                                Choisir cette option
+                            </Link>
+                        </motion.div>
+                    )
+                })}
+            </div>
+        </motion.div>
+    </div>
+</section>
+
+            
 
             <ServiceFAQ /> 
 
@@ -288,7 +310,7 @@ export default function SoinDetailPage({ params }) {
                 animate={{ y: 0 }}
                 transition={{ type: 'spring', stiffness: 100 }}
             >
-                <Link href="/contact" className="bg-[#C87A5E] text-white px-6 py-4 rounded-full font-semibold shadow-lg hover:bg-[#b56b50] transition-colors flex items-center gap-2">
+                <Link href="/contact" className="bg-[#af4d30] text-white px-6 py-4 rounded-full font-semibold shadow-lg hover:bg-[#b56b50] transition-colors flex items-center gap-2">
                     Réserver ce Soin
                 </Link>
             </motion.div>

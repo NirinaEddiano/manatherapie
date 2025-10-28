@@ -6,38 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const servicesList = [
-    {
-        title: "Massages Thérapeutiques",
-        category: "Détente & Harmonie",
-        description: "Un voyage sensoriel pour dénouer les tensions musculaires et apaiser l'esprit en profondeur.",
-        link: "/soins/massages",
-        bookingLink: "/contact", // Lien de réservation générique pour l'instant
-        imageSrc: "/images/soins-massage.jpg",
-    },
-    {
-        title: "Drainage Lymphatique",
-        category: "Détox & Légèreté",
-        description: "Relancez votre énergie vitale, affinez votre silhouette et libérez votre corps des toxines.",
-        link: "/soins/drainage",
-        bookingLink: "/contact",
-        imageSrc: "/images/soins-drainage.jpg",
-    },
-    {
-        title: "Maderothérapie",
-        category: "Sculpture & Fermeté",
-        description: "Sculptez et tonifiez votre corps avec la puissance du bois pour une peau visiblement plus lisse.",
-        link: "/soins/maderotherapie",
-        bookingLink: "/contact",
-        imageSrc: "/images/soins-madero.jpg",
-    },
-    {
-        title: "Soins Spécialisés",
-        category: "Approche Ciblée",
-        description: "Une réponse thérapeutique précise pour des besoins spécifiques et un accompagnement sur-mesure.",
-        link: "/soins/specialises",
-        bookingLink: "/contact",
-        imageSrc: "/images/soins-specialise.jpg",
-    },
+    { title: "MANAXFACE", category: "Drainage Visage", description: "Pour un visage visiblement dégonflé, lifté et lumineux.", link: "/soins/manaxface", bookingLink: "/contact",imageSrc: "/images/hero-manaxface.jpg" },
+    { title: "MANAXDRAIN", category: "Drainage Corps", description: "Détoxifiez votre organisme, luttez contre la rétention d'eau.", link: "/soins/manaxdrain",bookingLink: "/contact", imageSrc: "/images/hero-manaxdrain.jpg" },
+    { title: "MANAXSCULPT", category: "Remodelage Manuel", description: "'Cassez' la cellulite adipeuse et tonifiez votre peau.", link: "/soins/manaxsculpt",bookingLink: "/contact", imageSrc: "/images/hero-manaxsculpt.jpg" },
+    { title: "MADÉROXDRAIN", category: "Madero & Drainage", description: "Double action anti-cellulite pour une perte de centimètres visible.", link: "/soins/maderoxdrain", bookingLink: "/contact",imageSrc: "/images/hero-maderoxdrain.jpg" },
+    { title: "MADÉROXICE", category: "Madero & Cryo", description: "Effet tenseur et raffermissant immédiat grâce au choc thermique.", link: "/soins/maderoxice",bookingLink: "/contact", imageSrc: "/images/hero-maderoxice.jpg" },
+    { title: "MANAFAST", category: "Soin Express", description: "Un protocole intensif de 25 minutes sur une zone ciblée.", link: "/soins/manafast",bookingLink: "/contact", imageSrc: "/images/hero-manafast.jpg" },
 ];
 
 const containerVariants = {
@@ -69,7 +43,7 @@ const ServicesGrid = () => {
                 </motion.div>
 
                 <motion.div 
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                    className="relative z-[2] grid grid-cols-1 md:grid-cols-2 gap-8"
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -93,7 +67,7 @@ const ServicesGrid = () => {
 
                                 <div className="absolute bottom-0 left-0 right-0 p-8 bg-[#FFF7ED] group-hover:bg-transparent transition-colors duration-500">
                                     <div className="transition-transform duration-700 ease-in-out group-hover:-translate-y-8">
-                                        <p className="font-semibold text-[#C87A5E] mb-1">{service.category}</p>
+                                        <p className="font-semibold text-[#af4d30] mb-1">{service.category}</p>
                                         <h3 className="text-3xl font-bold text-[#1f2937]">{service.title}</h3>
                                         
                                         <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 transition-all duration-500">
@@ -101,7 +75,7 @@ const ServicesGrid = () => {
                                                 {service.description}
                                             </p>
                                             <div className="mt-6 flex gap-4">
-                                                <Link href={service.bookingLink} className="bg-[#C87A5E] text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1f2937] transition-all duration-300 transform hover:scale-105">
+                                                <Link href={service.bookingLink} className="bg-[#af4d30] text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1f2937] transition-all duration-300 transform hover:scale-105">
                                                     Réserver
                                                 </Link>
                                                 <Link href={service.link} className="border border-[#1f2937]/50 text-[#1f2937] px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1f2937] hover:text-white transition-all duration-300">

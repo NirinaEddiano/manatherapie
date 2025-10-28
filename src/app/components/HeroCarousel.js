@@ -93,7 +93,7 @@ const HeroCarousel = () => {
                     <motion.div variants={textVariants}>
                       <Link 
                         href={slide.buttonLink} 
-                        className="inline-block bg-[#C87A5E] text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#b56b50] transition-colors duration-300 transform hover:scale-105"
+                        className="inline-block bg-[#af4d30] text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#b56b50] transition-colors duration-300 transform hover:scale-105"
                       >
                         {slide.buttonText}
                       </Link>

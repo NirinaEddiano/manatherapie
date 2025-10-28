@@ -2,16 +2,19 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
 const soinsSubMenu = [
-    { title: "Massages Thérapeutiques", href: "/soins/massages" },
-    { title: "Drainage Lymphatique", href: "/soins/drainage" },
-    { title: "Maderothérapie", href: "/soins/maderotherapie" },
-    { title: "Soins Spécialisés", href: "/soins/specialises" },
+    { title: "MANAXFACE (Visage)", href: "/soins/manaxface" },
+    { title: "MANAXDRAIN (Corps)", href: "/soins/manaxdrain" },
+    { title: "MANAXSCULPT (Remodelage)", href: "/soins/manaxsculpt" },
+    { title: "MADÉROXDRAIN", href: "/soins/maderoxdrain" },
+    { title: "MADÉROXICE", href: "/soins/maderoxice" },
+    { title: "MANAFAST", href: "/soins/manafast" },
 ];
 
 const NavLink = ({ href, children, isScrolled }) => {
@@ -19,8 +22,8 @@ const NavLink = ({ href, children, isScrolled }) => {
   const isActive = pathname === href;
 
   const baseTextColor = isScrolled ? 'text-[#1f2937]' : 'text-white'; 
-  const activeTextColor = isScrolled ? 'text-[#C87A5E]' : 'text-white'; 
-  const hoverColor = isScrolled ? 'hover:text-[#C87A5E]' : 'hover:text-white/80';
+  const activeTextColor = isScrolled ? 'text-[#E35336]' : 'text-white'; 
+  const hoverColor = isScrolled ? 'hover:text-[#E35336]' : 'hover:text-white/80';
 
   return (
     <Link 
@@ -28,13 +31,9 @@ const NavLink = ({ href, children, isScrolled }) => {
       className={`relative group font-medium transition-colors duration-300 ${isActive ? activeTextColor : baseTextColor} ${hoverColor}`}
     >
       {children}
-      {isActive && (
-        <motion.div
-          className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-[#C87A5E]" 
-          layoutId="underline"
-          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-        />
-      )}
+      {isActive && !pathname.startsWith('/soins/') && (
+                <motion.div className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-[#E35336]" layoutId="underline" transition={{ type: 'spring', stiffness: 300, damping: 25 }} />
+            )}
     </Link>
   );
 };
@@ -54,12 +53,18 @@ const Navbar = () => {
   const isSoinsActive = pathname.startsWith('/soins');
 
   return (
-    <nav className={`fixed w-full z-20 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+    <nav className={`fixed w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <div className="container mx-auto px-6 py-1 flex justify-between items-center">
         
-        <Link href="/" className={`text-xl font-bold transition-colors duration-300 ${isScrolled ? 'text-[#C87A5E]' : 'text-white'}`}>
-          Manatherapie
-        </Link>
+        <Link href="/" className="relative h-12 w-12 md:h-14 md:w-14 rounded-full overflow-hidden">
+    {/* On utilise une seule image car la source est la même */}
+    <Image
+        src="/images/logo.jpeg"
+        alt="manatherapy logo"
+        fill
+        className="object-cover" // object-cover pour bien remplir le cercle
+    />
+</Link>
 
         <div className="hidden md:flex items-center space-x-7 text-sm">
           <NavLink href="/" isScrolled={isScrolled}>Accueil</NavLink>
@@ -68,7 +73,7 @@ const Navbar = () => {
             onHoverEnd={() => setIsSoinsOpen(false)}
             className="relative"
           >
-            <div className={`relative group font-medium transition-colors duration-300 flex items-center gap-1 cursor-pointer ${isSoinsActive ? (isScrolled ? 'text-[#C87A5E]' : 'text-white') : (isScrolled ? 'text-[#1f2937]' : 'text-white')} hover:${isScrolled ? 'text-[#C87A5E]' : 'text-white/80'}`}>
+            <div className={`relative group font-medium transition-colors duration-300 flex items-center gap-1 cursor-pointer ${isSoinsActive ? (isScrolled ? 'text-[#af4d30]' : 'text-white') : (isScrolled ? 'text-[#1f2937]' : 'text-white')} hover:${isScrolled ? 'text-[#af4d30]' : 'text-white/80'}`}>
               Nos Soins
               <motion.div animate={{ rotate: isSoinsOpen ? 180 : 0 }}>
                 <ChevronDown size={16} />
@@ -76,7 +81,7 @@ const Navbar = () => {
             </div>
             {isSoinsActive && (
                  <motion.div
-                 className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-[#C87A5E]"
+                 className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-[#af4d30]"
                  layoutId="underline"
                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                />
@@ -93,7 +98,7 @@ const Navbar = () => {
                   <ul className="space-y-1">
                     {soinsSubMenu.map(item => (
                       <li key={item.href}>
-                        <Link href={item.href} className="block px-4 py-2 text-sm text-[#1f2937] hover:bg-[#FFF7ED] hover:text-[#C87A5E] rounded-md transition-colors">
+                        <Link href={item.href} className="block px-4 py-2 text-sm text-[#1f2937] hover:bg-[#FADDAA] hover:text-[#af4d30] rounded-md transition-colors">
                           {item.title}
                         </Link>
                       </li>
@@ -115,8 +120,8 @@ const Navbar = () => {
             href="/auth/login" 
             className={`font-medium px-4 py-1.5 rounded-full border-2 transition-all duration-300 ${
               isScrolled 
-                ? 'text-[#C87A5E] border-[#C87A5E]/40 hover:bg-[#C87A5E] hover:text-white' 
-                : 'text-white border-white hover:bg-white hover:text-[#C87A5E]' // <-- CORRECTION CLÉ ICI
+                ? 'text-[#af4d30] border-[#af4d30] hover:bg-[#af4d30] hover:text-white' 
+                : 'text-white border-white hover:bg-white hover:text-[#af4d30]' // <-- CORRECTION CLÉ ICI
             }`}
           >
             Se Connecter
@@ -127,8 +132,8 @@ const Navbar = () => {
             href="/auth/register" 
             className={`font-medium px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 ${
               isScrolled 
-                ? 'bg-[#C87A5E] text-white hover:bg-opacity-90' // <-- CORRECTION CLÉ ICI
-                : 'bg-white text-[#C87A5E] hover:bg-white/90'   // <-- CORRECTION CLÉ ICI
+                ? 'bg-[#af4d30] text-white hover:bg-opacity-90' // <-- CORRECTION CLÉ ICI
+                : 'bg-white text-[#af4d30] hover:bg-white/90'   // <-- CORRECTION CLÉ ICI
             }`}
           >
             S'inscrire
@@ -146,14 +151,14 @@ const Navbar = () => {
         {isOpen && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white shadow-lg overflow-hidden">
             <div className="px-6 pb-6 pt-2 flex flex-col space-y-4 text-center">
-              <Link href="/" className="text-[#1f2937] hover:text-[#C87A5E]">Accueil</Link>
-              <Link href="/soins" className="text-[#1f2937] hover:text-[#C87A5E]">Nos Soins</Link>
-              <Link href="/academie" className="text-[#1f2937] hover:text-[#C87A5E]">Académie</Link>
-              <Link href="/coaching" className="text-[#1f2937] hover:text-[#C87A5E]">Coaching</Link>
-              <Link href="/contact" className="text-[#1f2937] hover:text-[#C87A5E]">Contact</Link>
+              <Link href="/" className="text-[#1f2937] hover:text-[#af4d30]">Accueil</Link>
+              <Link href="/soins" className="text-[#1f2937] hover:text-[#af4d30]">Nos Soins</Link>
+              <Link href="/academie" className="text-[#1f2937] hover:text-[#af4d30]">Académie</Link>
+              <Link href="/coaching" className="text-[#1f2937] hover:text-[#af4d30]">Coaching</Link>
+              <Link href="/contact" className="text-[#1f2937] hover:text-[#af4d30]">Contact</Link>
               <div className="border-t border-gray-200 pt-4 flex flex-col space-y-3">
                  <Link href="/auth/login" className="text-center text-[#1f2937] font-medium py-2 rounded-full bg-gray-100 hover:bg-gray-200">Se Connecter</Link>
-                 <a href="/auth/register" className="text-center bg-[#C87A5E] text-white px-5 py-2 rounded-full hover:bg-opacity-90">S'inscrire</a>
+                 <a href="/auth/register" className="text-center bg-[#af4d30] text-white px-5 py-2 rounded-full hover:bg-opacity-90">S'inscrire</a>
               </div>
             </div>
           </motion.div>

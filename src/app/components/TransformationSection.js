@@ -47,7 +47,7 @@ const TransformationSection = () => {
             
             {/* --- L'image centrale --- */}
             <motion.div 
-                className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden shadow-2xl"
+                className="relative z-[2] w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden shadow-2xl"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -65,7 +65,7 @@ const TransformationSection = () => {
             {transformations.slice(0, 10).map((item, index) => (
                 <motion.div 
                     key={index}
-                    className="absolute bg-white p-3 sm:p-4 rounded-full shadow-lg flex items-center gap-2"
+                    className=" absolute z-[2] bg-white p-3 sm:p-4 rounded-full shadow-lg flex items-center gap-2"
                     // On applique la position dynamiquement
                     style={{
                         top: badgePositions[index].top,
@@ -79,7 +79,7 @@ const TransformationSection = () => {
                     transition={{ delay: 0.1 * index }} // Délai en cascade
                 >
                     <span className="text-sm sm:text-base font-semibold text-gray-400 line-through">{item.from}</span>
-                    <ArrowRight className="text-[#C87A5E] flex-shrink-0" size={18}/>
+                    <ArrowRight className="text-[#af4d30] flex-shrink-0" size={18}/>
                     <span className="text-sm sm:text-base font-bold text-[#1f2937]">{item.to}</span>
                 </motion.div>
             ))}

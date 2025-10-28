@@ -58,7 +58,7 @@ const ServicesSection = () => {
         </motion.div>
 
         <motion.div 
-          className="space-y-20"
+          className="space-y-20 relative z-[2]"
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
@@ -71,7 +71,7 @@ const ServicesSection = () => {
               variants={itemVariants}
             >
               {/* --- Image --- */}
-              <div className="w-full md:w-1/2 h-80 md:h-[400px] relative overflow-hidden rounded-2xl">
+              <div className="w-full z-[20] md:w-1/2 h-80 md:h-[400px] relative overflow-hidden rounded-2xl">
                 <Image
                   src={service.imageSrc}
                   alt={service.title}
@@ -85,7 +85,7 @@ const ServicesSection = () => {
               <div className="w-full md:w-1/2">
                 <h3 className="text-3xl md:text-4xl font-bold text-[#1f2937] mb-4">{service.title}</h3>
                 <p className="text-lg text-gray-600 leading-relaxed mb-6">{service.description}</p>
-                <Link href={service.link} className="inline-flex items-center text-lg font-semibold text-[#C87A5E] group-hover:text-[#b56b50]">
+                <Link href={service.link} className="inline-flex items-center text-lg font-semibold text-[#af4d30] group-hover:text-[#b56b50]">
                   Explorer cet univers
                   <motion.span 
                     className="ml-2 transition-transform duration-300"

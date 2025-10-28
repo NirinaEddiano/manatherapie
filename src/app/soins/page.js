@@ -4,6 +4,7 @@ import ServicesGrid from '../components/ServicesGrid';
 import ApproachSection from '../components/ApproachSection'; 
 import SoinsFAQSection from '../components/SoinsFAQSection';
 import FloatingCtaButton from '../components/FloatingCtaButton'; 
+import ContactCTA from '@/app/components/ContactCTA';
 
 export const metadata = {
   title: "Manatherapie - Soins",
@@ -25,6 +26,7 @@ export default function SoinsPage() {
         href="/contact" 
         text="Réserver un Soin" 
       />
+      <ContactCTA />
     </main>
   );
 }

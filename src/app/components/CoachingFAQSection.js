@@ -13,7 +13,7 @@ const faqData = [
 ];
 
 const FAQItem = ({ item, isOpen, onClick }) => (
-    <div className="border-b border-gray-200">
+    <div className="relative z-[2] border-b border-gray-200">
         <button onClick={onClick} className="w-full text-left py-5 flex justify-between items-center">
             <span className="text-lg font-semibold text-[#1f2937]">{item.q}</span>
             <motion.div animate={{ rotate: isOpen ? 90 : 0 }}><ChevronRight/></motion.div>

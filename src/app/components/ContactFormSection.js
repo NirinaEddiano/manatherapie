@@ -7,9 +7,9 @@ import Link from 'next/link';
 
 const ContactFormSection = () => {
   return (
-    <section className="bg-[#FFF7ED] py-24 px-6 md:px-12">
+    <section className=" bg-[#FADDAA] py-24 px-6 md:px-12">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-2xl shadow-xl overflow-hidden min-h-[90vh]">
+        <div className="relative z-[2] grid grid-cols-1 lg:grid-cols-12 rounded-2xl shadow-xl overflow-hidden min-h-[90vh]">
           <motion.div 
             className="lg:col-span-7 h-96 lg:h-full clip-wave-right"
             initial={{ opacity: 0, scale: 1.1 }}
@@ -27,8 +27,7 @@ const ContactFormSection = () => {
               className="filter saturate(60%) hue-rotate(-45deg) brightness(95%) contrast(120%)"
             ></iframe>
           </motion.div>
-          
-          {/* --- PARTIE DROITE : CONTACT & FORMULAIRE (5 colonnes) --- */}
+
           <motion.div 
             className="lg:col-span-5 bg-white p-8 md:p-12 flex flex-col justify-center"
             initial={{ opacity: 0, x: 50 }} // Animation depuis la droite
@@ -54,7 +53,7 @@ const ContactFormSection = () => {
               
               <motion.button
                 type="submit"
-                className="w-full bg-[#C87A5E] text-white px-6 py-3 rounded-lg font-semibold text-lg"
+                className="w-full bg-[#af4d30] text-white px-6 py-3 rounded-lg font-semibold text-lg"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -66,16 +65,16 @@ const ContactFormSection = () => {
               <h3 className="font-semibold text-[#1f2937] mb-4">Nos coordonnées</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-center gap-3">
-                  <Mail size={18} className="text-[#C87A5E]" />
-                  <a href="mailto:contact@manatherapie.fr" className="hover:text-[#C87A5E] transition-colors">contact@manatherapie.fr</a>
+                  <Mail size={18} className="text-[#af4d30]" />
+                  <a href="mailto:Manatherapy.mp@gmail.com" className="hover:text-[#af4d30] transition-colors">Manatherapy.mp@gmail.com</a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone size={18} className="text-[#C87A5E]" />
-                  <span>06 00 00 00 00</span>
+                  <Phone size={18} className="text-[#af4d30]" />
+                  <a href="tel:0769899612" className="hover:text-[#af4d30]">07 69 89 96 12</a>
                 </li>
                  <li className="flex items-center gap-3">
-                  <MapPin size={18} className="text-[#C87A5E]" />
-                  <span>123 Rue du Bien-être, 75001 Paris</span>
+                  <MapPin size={18} className="text-[#af4d30]" />
+                  <span>24 impasse de l’estivage, 13800 Istres</span>
                 </li>
               </ul>
             </div>

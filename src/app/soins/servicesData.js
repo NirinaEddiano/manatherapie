@@ -1,251 +1,198 @@
-// src/app/soins/servicesData.js
-
 export const servicesDetails = {
-    massages: {
-        slug: 'massages',
-        title: "Massages Thérapeutiques",
-        subtitle: "Une reconnexion profonde avec votre corps.",
-        heroImage: '/images/hero-massage.jpg',
-        introText: "Plus qu'une simple relaxation, nos massages thérapeutiques sont des protocoles de soin profonds conçus pour libérer les blocages physiques et émotionnels, restaurer la mobilité et apaiser le système nerveux. Chaque séance est une expérience unique, entièrement adaptée à vos besoins du moment.",
-        // NOUVEAU: section "Idéal pour..."
-        idealFor: [
-            "Stress chronique et anxiété",
-            "Tensions musculaires (dos, nuque)",
-            "Fatigue et troubles du sommeil",
-            "Besoin de lâcher-prise"
-        ],
-        benefits: ["Relâchement musculaire profond", "Clarté mentale retrouvée", "Sommeil réparateur", "Circulation améliorée"],
+    manaxface: {
+        slug: 'manaxface',
+        title: "MANAXFACE",
+        subtitle: "Le drainage lymphatique du visage pour un éclat instantané.",
+        heroImage: '/images/hero-manaxface.jpg',
+        introText: "Le MANAXFACE est un protocole exclusif de drainage lymphatique manuel du visage. Il vise à désengorger les tissus, réduire les poches et les cernes, et sculpter l'ovale du visage pour un effet liftant naturel et un teint lumineux.",
+        idealFor: ["Visage gonflé, poches et cernes", "Teint terne et fatigué", "Perte de fermeté de l'ovale du visage", "Désir d'un 'glow up' naturel avant un événement"],
+        benefits: ["Effet 'bonne mine' immédiat", "Traits du visage redessinés", "Peau détoxifiée et éclatante", "Réduction des signes de fatigue"],
         process: [
-            { title: "Échange & Bilan", description: "Un temps d'écoute pour comprendre vos besoins et définir ensemble l'intention du soin." },
-            { title: "Le Soin sur Mesure", description: "Vous recevez le massage avec des huiles végétales biologiques adaptées à votre peau et vos besoins." },
-            { title: "Intégration & Repos", description: "Un temps de calme vous est accordé après le soin pour permettre à votre corps d'intégrer pleinement les bienfaits." },
-            { title: "Conseils Personnalisés", description: "Nous terminons par une tisane, et des conseils pour prolonger les effets de la séance chez vous." }
+            { title: "Nettoyage & Préparation", description: "La peau est délicatement nettoyée et préparée avec une huile végétale neutre pour débuter le soin.", image: "/images/process-visage-nettoyage.jpg" },
+            { title: "Manœuvres Drainantes", description: "Des pompages et des mouvements lents sont effectués du décolleté vers le visage pour stimuler les ganglions lymphatiques.", image: "/images/process-visage-drainage.jpg" },
+            { title: "Modelage & 'Lifting'", description: "Des gestes plus appuyés viennent sculpter les contours, notamment les pommettes et la mâchoire.", image: "/images/process-visage-modelage.jpg" },
+            { title: "Hydratation Finale", description: "Application d'un soin hydratant pour apaiser, protéger la peau et révéler son éclat.", image: "/images/process-visage-hydratation.jpg" }
         ],
         quote: {
-            text: "Le corps parle une langue que l'esprit a parfois oubliée. Nous sommes là pour traduire.",
-            bgImage: "/images/quote-massage-bg.jpg"
+            text: "Révélez la lumière naturelle de votre visage.",
+            bgImage: "/images/process-visage-nettoyage.jpg"
         },
         pricing: {
-            duration: "60 min",
-            price: "80€",
-            details: "Possibilité de cure de 5 séances pour un travail en profondeur."
+            options: [
+                { name: "Séance unique", price: "30€", duration: "25 min" },
+                { name: "Cure de 3 séances", price: "80€", duration: "3 x 25 min" },
+                { name: "Cure de 6 séances", price: "140€", duration: "6 x 25 min" }
+            ],
+            details: "La cure est idéale pour des résultats durables et une amélioration visible de la qualité de la peau."
         },
-        gallery: ['/images/gallery-massage-1.jpg', '/images/gallery-massage-2.jpg', '/images/gallery-massage-3.jpg'],
+        gallery: ['/images/hero-manaxface.jpg','/images/gallery-visage-1.jpg', '/images/gallery-visage-2.jpg', '/images/gallery-visage-3.jpg'],
         fullGallery: [
-            '/images/hero-massage.jpg',
-            '/images/gallery-massage-1.jpg',
-            '/images/process-soin.jpg',
-            '/images/gallery-massage-2.jpg',
-            '/images/process-repos.jpg',
-            '/images/gallery-massage-3.jpg',
-            '/images/process-bilan.jpg',
-            '/images/process-conseils.jpg'
+            '/images/hero-manaxface.jpg', '/images/process-visage-nettoyage.jpg', '/images/gallery-visage-1.jpg', 
+            '/images/process-visage-drainage.jpg', '/images/gallery-visage-2.jpg', '/images/process-visage-modelage.jpg',
+            '/images/gallery-visage-3.jpg', '/images/process-visage-hydratation.jpg'
         ],
-        process: [
-    { title: "Échange & Bilan", description: "Ce premier temps d'échange est essentiel pour comprendre vos besoins et vos attentes.[1] Un bilan personnalisé est effectué afin de déterminer les zones à traiter et d'adapter le soin qui vous sera prodigué.", image: "/images/process-bilan.jpg" },
-    { title: "Le Soin sur Mesure", description: "À la suite du bilan, un soin entièrement personnalisé est créé pour répondre spécifiquement aux besoins de votre peau.[2] Ce soin sur mesure peut être purifiant, hydratant ou encore régénérant, grâce à des produits hautement concentrés en actifs pour un résultat visible.", image: "/images/process-soin.jpg" },
-    { title: "Intégration & Repos", description: "Après le soin, un temps de repos est nécessaire pour permettre à votre corps d'intégrer pleinement les bienfaits du traitement. Cette phase de relaxation favorise une régénération en profondeur.", image: "/images/process-repos.jpg" },
-    { title: "Conseils Personnalisés", description: "Pour prolonger les bénéfices du soin, des conseils personnalisés vous sont proposés.[4] Il est recommandé de suivre une routine de soins à domicile adaptée pour maintenir les résultats obtenus et prendre soin de votre peau au quotidien.", image: "/images/process-conseils.jpg" }
-],
- subServices: [
-            {
-                id: 'special-dos',
-                title: "Massage Spécial Dos",
-                text: "Un protocole de 60 minutes entièrement dédié à la libération des tensions de la nuque, des trapèzes, des épaules et de la région lombaire. Idéal pour les personnes travaillant en position assise.",
-                price: "85€",
-                image: "/images/sub-massage-dos.jpg"
-            },
-            {
-                id: 'deep-tissue',
-                title: "Massage 'Deep Tissue'",
-                text: "Un massage profond et puissant qui vise les couches profondes des muscles et des fascias. Parfait pour les sportifs et pour soulager les douleurs chroniques.",
-                price: "95€",
-                image: "/images/sub-massage-sportif.jpg"
-            }
-        ]
+        subServices: [] // Pas de sous-service pour celui-ci
     },
-    drainage: {
-        slug: 'drainage',
-        title: "Drainage Lymphatique",
-        subtitle: "Relancez votre énergie, retrouvez la légèreté.",
-        heroImage: '/images/hero-drainage.jpg',
-        introText: "Notre méthode de drainage lymphatique est une technique manuelle douce qui stimule la circulation de la lymphe pour détoxifier l'organisme, renforcer le système immunitaire et affiner la silhouette. C'est le soin idéal pour lutter contre la rétention d'eau, la cellulite et retrouver une sensation de bien-être global.",
-        idealFor: [
-            "Rétention d'eau et jambes lourdes",
-            "Cellulite aqueuse",
-            "Détox post-excès ou saisonnière",
-            "Récupération post-opératoire (sur avis médical)"
-        ],
-        benefits: ["Silhouette affinée", "Peau plus lisse", "Système immunitaire renforcé", "Bien-être digestif"],
+    manaxdrain: {
+        slug: 'manaxdrain',
+        title: "MANAXDRAIN",
+        subtitle: "Le drainage lymphatique corps pour une détox profonde.",
+        heroImage: '/images/hero-manaxdrain.jpeg',
+        introText: "Le MANAXDRAIN est une méthode de drainage lymphatique manuel du corps entier qui vise à stimuler la circulation de la lymphe pour détoxifier l'organisme, réduire la rétention d'eau et la cellulite aqueuse. Une véritable remise à zéro pour votre corps.",
+        idealFor: ["Sensation de jambes lourdes", "Rétention d'eau, œdème", "Ballonnements et transit lent", "Besoin d'une détox globale du corps"],
+        benefits: ["Sensation de légèreté immédiate", "Silhouette affinée et dégonflée", "Amélioration du système immunitaire", "Bien-être digestif"],
         process: [
-    { title: "Diagnostic Personnalisé", description: "Nous évaluons les zones à traiter et définissons les objectifs de la séance.", image: "/images/process-drainage-bilan.jpg" },
-    { title: "Manœuvres Douces", description: "Des mouvements lents, rythmés et précis sont appliqués sur le corps pour stimuler les ganglions et la circulation.", image: "/images/process-drainage-soin.jpg" },
-    { title: "Phase de Repos & Hydratation", description: "Un temps de repos et un grand verre d'eau permettent au système de s'activer et de commencer son travail de nettoyage.", image: "/images/process-drainage-repos.jpg" },
-    { title: "Recommandations", description: "Nous vous donnons des conseils d'hydratation et de nutrition pour optimiser les résultats du drainage.", image: "/images/process-drainage-conseils.jpg" }
-],
+            { title: "Diagnostic Personnalisé", description: "Nous évaluons les zones de rétention et définissons les objectifs de la séance.", image: "/images/process-corps-bilan.jpeg" },
+            { title: "Manœuvres Drainantes", description: "Des mouvements de pompage lents et rythmés sont appliqués sur le corps pour stimuler la circulation.", image: "/images/process-corps-drainage.jpg" },
+            { title: "Focus Zones Ciblées", description: "Une attention particulière est portée aux jambes, au ventre et aux bras pour maximiser les résultats.", image: "/images/process-corps-focus.jpg" },
+            { title: "Recommandations", description: "Nous vous donnons des conseils d'hydratation pour optimiser et prolonger les effets du drainage.", image: "/images/process-corps-conseils.jpg" }
+        ],
         quote: {
             text: "La légèreté n'est pas une absence de poids, mais une présence de fluidité.",
-            bgImage: "/images/quote-drainage-bg.jpg"
+            bgImage: "/images/process-corps-drainage.jpg"
         },
         pricing: {
-            duration: "50 min",
-            price: "90€",
-            details: "Cure de 5 ou 10 séances recommandée pour des résultats optimaux et durables."
+            options: [
+                { name: "Séance unique", price: "60€", duration: "50 min" },
+                { name: "Cure de 3 séances", price: "160€", duration: "3 x 50 min" },
+                { name: "Cure de 6 séances", price: "310€", duration: "6 x 50 min" }
+            ],
+            details: "Pour des résultats visibles sur la cellulite et la rétention d'eau, une cure est fortement recommandée."
         },
-        gallery: ['/images/gallery-drainage-1.jpg', '/images/gallery-drainage-2.jpg', '/images/gallery-drainage-3.jpg'],
+        gallery: ['/images/gallery-corps-1.jpg', '/images/gallery-corps-2.jpg', '/images/gallery-corps-3.jpg'],
         fullGallery: [
-            '/images/hero-drainage.jpg',
-            '/images/gallery-drainage-1.jpg',
-            '/images/process-drainage-soin.jpg',
-            '/images/gallery-drainage-2.jpg',
-            '/images/process-drainage-repos.jpg',
-            '/images/gallery-drainage-3.jpg',
-            '/images/process-drainage-bilan.jpg',
-            '/images/process-drainage-conseils.jpg'
+            '/images/hero-manaxdrain.jpeg', '/images/process-corps-bilan.jpg', '/images/gallery-corps-1.jpg',
+            '/images/process-corps-drainage.jpg', '/images/gallery-corps-2.jpg', '/images/process-corps-focus.jpg',
+            '/images/gallery-corps-3.jpg', '/images/process-corps-conseils.jpg'
         ],
-        subServices: [
-            {
-                id: 'femme-enceinte',
-                title: "Lympho-Drainage Femme Enceinte",
-                text: "Adapté à partir du 4ème mois de grossesse, ce soin ultra-doux aide à lutter contre la rétention d'eau et la sensation de jambes lourdes, tout en apportant une profonde relaxation.",
-                price: "90€",
-                image: "/images/sub-drainage-enceinte.jpg"
-            },
-            {
-                id: 'post-operatoire',
-                title: "Lympho-Drainage Post-Opératoire",
-                text: "Sur avis médical uniquement, ce soin est essentiel pour réduire les œdèmes, accélérer la cicatrisation et améliorer le confort après une intervention chirurgicale.",
-                price: "100€",
-                image: "/images/sub-drainage-postop.jpg"
-            }
-        ]
+        subServices: []
     },
-    // --- NOUVEAUX SERVICES AJOUTÉS ---
-    maderotherapie: {
-        slug: 'maderotherapie',
-        title: "Maderothérapie",
-        subtitle: "La puissance du bois pour sculpter votre corps.",
-        heroImage: '/images/hero-madero.jpg',
-        introText: "La Maderothérapie est une technique colombienne ancestrale qui utilise des instruments en bois spécialement conçus pour masser, remodeler et raffermir le corps. Ce soin intense agit en profondeur sur les amas graisseux et la cellulite, tout en stimulant la circulation sanguine et lymphatique pour une peau visiblement plus tonique.",
-        idealFor: [
-            "Cellulite fibreuse et adipeuse",
-            "Perte de fermeté cutanée",
-            "Remodelage de la silhouette (hanches, cuisses, ventre)",
-            "Désir d'un soin intense et tonifiant"
-        ],
-        benefits: ["Réduction visible de la cellulite", "Peau raffermie et tonifiée", "Silhouette sculptée", "Activation du métabolisme"],
+    // ... Continuez de remplir les autres services sur ce modèle complet ...
+    // MANAXSCULPT
+    manaxsculpt: {
+        slug: 'manaxsculpt',
+        title: "MANAXSCULPT",
+        subtitle: "Le remodelage manuel pour redessiner votre silhouette.",
+        heroImage: '/images/hero-manaxsculpt.jpg',
+        introText: "Le MANAXSCULPT est un massage remodelant intense qui vise à 'casser' les amas graisseux et la cellulite adipeuse. Les manœuvres sont fermes et rapides pour sculpter le corps, affiner la taille et tonifier la peau.",
+        idealFor: ["Cellulite installée (adipeuse, fibreuse)", "Manque de fermeté", "Remodelage post-partum (après avis médical)", "Redessiner des zones spécifiques"],
+        benefits: ["Peau plus lisse et ferme", "Réduction de l'aspect 'peau d'orange'", "Silhouette visiblement sculptée", "Activation de la circulation sanguine"],
         process: [
-    { title: "Préparation de la Peau", description: "La séance débute par une application d'huiles spécifiques pour préparer la peau et faciliter le passage des instruments.", image: "/images/process-madero-bilan.jpg" },
-    { title: "Travail avec les Instruments", description: "Chaque instrument en bois est utilisé avec une technique précise pour casser les adipocytes, drainer et lisser.", image: "/images/process-madero-soin.jpg" },
-    { title: "Massage Manuel Final", description: "Un massage manuel termine la séance pour apaiser la peau, drainer et harmoniser les résultats.", image: "/images/process-madero-final.jpg" },
-    { title: "Protocole de Suivi", description: "Nous établissons ensemble un plan de séances et des conseils d'auto-massage pour atteindre vos objectifs.", image: "/images/process-madero-conseils.jpg" }
-],
-        quote: {
-            text: "La nature nous offre les outils pour sculpter l'harmonie de nos propres formes.",
-            bgImage: "/images/quote-madero-bg.jpg"
-        },
+            { title: "Analyse des Tissus", description: "Nous identifions la nature de votre cellulite et les zones à travailler en priorité.", image: "/images/process-sculpt-bilan.jpg" },
+            { title: "Pétrissage & Palper-Rouler", description: "Des manœuvres manuelles intenses sont appliquées pour déloger les graisses profondes.", image: "/images/process-sculpt-soin.jpg" },
+            { title: "Lissage & Drainage", description: "La séance se termine par des mouvements de lissage pour drainer les toxines libérées et unifier la peau.", image: "/images/process-sculpt-lissage.jpg" },
+            { title: "Conseils de Suivi", description: "Des recommandations sur le mode de vie vous sont données pour maintenir les résultats.", image: "/images/process-sculpt-conseils.jpg" }
+        ],
+        quote: { text: "Reprenez le pouvoir sur les formes de votre corps.", bgImage: "/images/quote-texture-argile.jpg" },
         pricing: {
-            duration: "45 min",
-            price: "75€",
-            details: "Très efficace en cure pour une transformation visible de la silhouette."
+            options: [
+                { name: "Corps entier", price: "70€", duration: "50 min" },
+                { name: "Cure de 3 (Corps)", price: "200€", duration: "3 x 50 min" },
+                { name: "Cure de 6 (Corps)", price: "380€", duration: "6 x 50 min" },
+                { name: "Zone ciblée", price: "40€", duration: "30 min" },
+                { name: "Cure de 3 (Zone)", price: "110€", duration: "3 x 30 min" },
+                { name: "Cure de 6 (Zone)", price: "220€", duration: "6 x 30 min" }
+            ],
+            details: "Le travail par zone (ex: ventre/taille ou cuisses/fessiers) est idéal pour un besoin très localisé."
+        },
+        gallery: ['/images/gallery-sculpt-1.jpg', '/images/gallery-sculpt-2.jpg', '/images/gallery-sculpt-3.jpg'],
+        fullGallery: [
+            '/images/hero-manaxsculpt.jpg', '/images/process-sculpt-bilan.jpg', '/images/gallery-sculpt-1.jpg',
+            '/images/process-sculpt-soin.jpg', '/images/gallery-sculpt-2.jpg', '/images/process-sculpt-lissage.jpg',
+            '/images/gallery-sculpt-3.jpg', '/images/process-sculpt-conseils.jpg'
+        ],
+        subServices: []
+    },
+    // MADÉROXDRAIN
+    maderoxdrain: {
+        slug: 'maderoxdrain',
+        title: "MADÉROXDRAIN",
+        subtitle: "L'alliance du bois et du drainage pour un résultat optimisé.",
+        heroImage: '/images/hero-maderoxdrain.jpg',
+        introText: "Le MADÉROXDRAIN combine le meilleur des deux mondes : la puissance de la Maderothérapie pour casser la cellulite et remodeler, suivie d'un drainage lymphatique manuel pour éliminer les toxines et l'eau. C'est le soin combiné le plus efficace pour une transformation complète.",
+        idealFor: ["Cellulite mixte (aqueuse et adipeuse)", "Recherche de résultats rapides et visibles", "Préparation avant l'été ou un événement", "Action anti-gonflement et sculptante"],
+        benefits: ["Double action anti-cellulite", "Perte de centimètres visible", "Peau lissée et tonifiée", "Sensation de légèreté intense"],
+        process: [
+            { title: "Phase 1 : Maderothérapie", description: "Nous commençons par un travail intense avec les outils en bois sur les zones ciblées.", image: "/images/process-madero-soin.jpg" },
+            { title: "Phase 2 : Drainage Manuel", description: "Nous enchaînons avec les manœuvres douces du drainage pour évacuer ce qui a été délogé.", image: "/images/process-corps-drainage.jpg" },
+        ],
+        quote: { text: "Deux techniques, une synergie, des résultats décuplés.", bgImage: "/images/quote-texture-bois.jpg" },
+        pricing: {
+            options: [
+                { name: "Corps entier", price: "70€", duration: "60 min" },
+                { name: "Cure de 3 (Corps)", price: "200€", duration: "3 x 60 min" },
+                { name: "Cure de 6 (Corps)", price: "390€", duration: "6 x 60 min" },
+                { name: "Zone ciblée", price: "40€", duration: "30 min" },
+                { name: "Cure de 3 (Zone)", price: "110€", duration: "3 x 30 min" },
+                { name: "Cure de 6 (Zone)", price: "220€", duration: "6 x 30 min" }
+            ],
+            details: "La combinaison parfaite pour une action globale et en profondeur."
         },
         gallery: ['/images/gallery-madero-1.jpg', '/images/gallery-madero-2.jpg', '/images/gallery-madero-3.jpg'],
         fullGallery: [
-            '/images/hero-madero.jpg',
-            '/images/gallery-madero-1.jpg',
-            '/images/process-madero-soin.jpg',
-            '/images/gallery-madero-2.jpg',
-            '/images/process-madero-final.jpg',
-            '/images/gallery-madero-3.jpg',
-            '/images/process-madero-bilan.jpg',
-            '/images/process-madero-conseils.jpg'
+            '/images/hero-maderoxdrain.jpg', '/images/gallery-madero-1.jpg', '/images/gallery-corps-1.jpg',
+            '/images/gallery-madero-2.jpg', '/images/gallery-corps-2.jpg', '/images/gallery-madero-3.jpg',
+            '/images/gallery-corps-3.jpg', '/images/process-madero-soin.jpg'
         ],
-        subServices: [
-    {
-        id: 'jambes-fessiers',
-        title: "Cure Madero 'Jambes & Fessiers'",
-        text: "Un protocole intensif centré sur le bas du corps pour casser la cellulite, drainer les toxines et remodeler en profondeur les cuisses et les fesses. Idéal pour retrouver une peau lisse et des jambes légères.",
-        price: "À partir de 80€/séance",
-        image: "/images/sub-madero-jambes.jpg"
+        subServices: []
     },
-    {
-        id: 'ventre-taille',
-        title: "Soin Madero 'Ventre & Taille'",
-        text: "Ce soin ciblé utilise des instruments spécifiques pour déloger les graisses abdominales, affiner la taille et améliorer le transit. Il favorise un ventre plus plat et une meilleure digestion.",
-        price: "À partir de 70€/séance",
-        image: "/images/sub-madero-ventre.jpg"
-    },
-    {
-        id: 'corps-complet',
-        title: "Remodelage Madero 'Corps Complet'",
-        text: "L'expérience de maderothérapie ultime. Un soin global qui travaille l'ensemble de la silhouette (jambes, fessiers, taille, bras) pour une transformation harmonieuse et complète du corps.",
-        price: "À partir de 120€/séance",
-        image: "/images/sub-madero-corps.jpg"
-    }
-]
-
-    },
-    specialises: {
-        slug: 'specialises',
-        title: "Soins Spécialisés",
-        subtitle: "Une approche thérapeutique pour des besoins ciblés.",
-        heroImage: '/images/hero-specialise.jpg',
-        introText: "Cette gamme de soins s'adresse à des problématiques spécifiques, nécessitant une approche et des connaissances approfondies. Qu'il s'agisse d'accompagner des pathologies (avec accord médical), de préparer une épreuve sportive ou de soulager des douleurs chroniques, nous mettons en place un protocole entièrement personnalisé pour vous.",
-        idealFor: [
-            "Douleurs chroniques (fibromyalgie, endométriose...)",
-            "Accompagnement de pathologies lourdes",
-            "Préparation et récupération sportive",
-            "Recherche d'un soin hautement personnalisé"
+    // MADÉROXICE
+    maderoxice: {
+        slug: 'maderoxice',
+        title: "MADÉROXICE",
+        subtitle: "L'effet tenseur du froid allié à la puissance du bois.",
+        heroImage: '/images/hero-maderoxice.jpg',
+        introText: "Le MADÉROXICE est une innovation qui combine la Maderothérapie traditionnelle à l'application d'un gel cryogénique ou d'outils glacés. Le choc thermique créé par le froid intense provoque une vasoconstriction qui raffermit instantanément les tissus, booste la circulation et tonifie la peau.",
+        idealFor: ["Peau relâchée, manque de tonicité", "Jambes lourdes et mauvaise circulation", "Recherche d'un effet 'coup de fouet' tenseur", "Récupération sportive"],
+        benefits: ["Effet tenseur et raffermissant immédiat", "Peau plus tonique et élastique", "Soulagement instantané des jambes lourdes", "Amélioration de la texture de la peau"],
+        process: [
+            { title: "Phase 1 : Maderothérapie Classique", description: "Un premier passage avec les outils en bois à température ambiante pour préparer les tissus.", image: "/images/process-madero-soin.jpg" },
+            { title: "Phase 2 : Application du Froid", description: "Nous utilisons ensuite des outils spécifiques préalablement glacés ou un gel cryoactif pour créer le choc thermique.", image: "/images/process-ice-soin.jpg" },
         ],
-        benefits: ["Soulagement ciblé de la douleur", "Amélioration de la qualité de vie", "Soutien du corps et de l'esprit", "Performance sportive optimisée"],
-         process: [
-    { title: "Consultation Approfondie", description: "Une anamnèse complète est réalisée pour comprendre parfaitement votre situation, vos antécédents et vos objectifs.", image: "/images/process-specialise-bilan.jpg" },
-    { title: "Élaboration du Protocole", description: "Nous choisissons et combinons les techniques les plus adaptées à votre problématique unique.", image: "/images/process-specialise-protocole.jpg" },
-    { title: "Application du Soin Personnalisé", description: "Le soin est réalisé avec une attention constante à vos ressentis et à l'évolution de votre état.", image: "/images/process-specialise-soin.jpg" },
-    { title: "Suivi et Ajustement", description: "Nous faisons le point après chaque séance pour ajuster le protocole si nécessaire et assurer une progression optimale.", image: "/images/process-specialise-suivi.jpg" }
-],
-        quote: {
-            text: "Chaque douleur est une histoire. Notre rôle est de l'écouter avec précision et bienveillance.",
-            bgImage: "/images/quote-specialise-bg.jpg"
-        },
+        quote: { text: "Le feu du bois rencontre la glace pour une peau revitalisée.", bgImage: "/images/quote-texture-givre.jpg" },
         pricing: {
-            duration: "Sur mesure",
-            price: "Sur devis",
-            details: "Le tarif et la durée sont établis lors de la consultation initiale."
+            options: [
+                { name: "Corps entier", price: "70€", duration: "60 min" },
+                { name: "Cure de 3 séances", price: "200€", duration: "3 x 60 min" },
+                { name: "Cure de 6 séances", price: "390€", duration: "6 x 60 min" }
+            ],
+            details: "L'expérience est intense et les résultats sur la fermeté sont spectaculaires."
         },
-        gallery: ['/images/gallery-specialise-1.jpg', '/images/gallery-specialise-2.jpg', '/images/gallery-specialise-3.jpg'],
-         fullGallery: [
-            '/images/hero-specialise.jpg',
-            '/images/gallery-specialise-1.jpg',
-            '/images/process-specialise-soin.jpg',
-            '/images/gallery-specialise-2.jpg',
-            '/images/process-specialise-protocole.jpg',
-            '/images/gallery-specialise-3.jpg',
-            '/images/process-specialise-bilan.jpg',
-            '/images/process-specialise-suivi.jpg'
+        gallery: ['/images/gallery-ice-1.jpg', '/images/gallery-ice-2.jpg', '/images/gallery-ice-3.jpg'],
+        fullGallery: [
+            '/images/hero-maderoxice.jpg', '/images/gallery-madero-1.jpg', '/images/gallery-ice-1.jpg',
+            '/images/gallery-madero-2.jpg', '/images/gallery-ice-2.jpg', '/images/gallery-madero-3.jpg',
+            '/images/gallery-ice-3.jpg', '/images/process-ice-soin.jpg'
         ],
-        subServices: [
-    {
-        id: 'endometriose',
-        title: "Accompagnement Douleurs Chroniques (Endométriose, Fibromyalgie...)",
-        text: "Un protocole de soin entièrement personnalisé (basé sur des techniques viscérales, de relaxation et de drainage doux) pour aider à gérer la douleur, réduire l'inflammation et améliorer la qualité de vie au quotidien. Se fait en complément d'un suivi médical.",
-        price: "Sur devis",
-        image: "/images/sub-specialise-douleurs.jpg"
+        subServices: []
     },
-    {
-        id: 'sportif',
-        title: "Soin 'Récupération du Sportif'",
-        text: "Un soin profond combinant 'deep tissue', étirements passifs et techniques de relâchement myofascial pour accélérer la récupération, prévenir les blessures et améliorer la performance athlétique.",
-        price: "À partir de 95€/séance",
-        image: "/images/sub-specialise-recup.jpg"
-    },
-    {
-        id: 'post-partum',
-        title: "Soin 'Récupération Post-Partum'",
-        text: "Un soin cocon pour aider le corps à se réapproprier après l'accouchement. Il combine un drainage doux pour réduire l'œdème, un massage pour soulager les tensions du dos et un travail énergétique pour retrouver son centre.",
-        price: "À partir de 90€/séance",
-        image: "/images/sub-specialise-postpartum.jpg" 
-    }
-]
+    // MANAFAST
+    manafast: {
+        slug: 'manafast',
+        title: "MANAFAST",
+        subtitle: "Le soin express pour une zone ciblée.",
+        heroImage: '/images/hero-manafast.jpg',
+        introText: "Le MANAFAST est un soin rapide et ultra-ciblé de 20-25 minutes, idéal pour ceux et celles qui ont peu de temps. Choisissez une zone (dos, jambes ou ventre) et bénéficiez d'un protocole intensif pour un soulagement ou un résultat express.",
+        idealFor: ["Personnes pressées", "Besoin d'un soulagement rapide sur une zone (dos bloqué...)", "Entretien entre deux séances de cure", "Découverte de nos techniques à petit prix"],
+        benefits: ["Soulagement rapide des tensions", "Action ciblée et efficace", "Idéal pour un emploi du temps chargé", "Résultats visibles sur une petite zone"],
+        process: [
+            { title: "Choix de la Zone", description: "Vous choisissez la zone à traiter : dos, jambes ou ventre.", image: "/images/process-fast-bilan.jpg" },
+            { title: "Soin Intensif", description: "Nous appliquons un protocole rapide et puissant adapté à la zone choisie.", image: "/images/process-fast-soin.jpg" },
+        ],
+        quote: { text: "Le bien-être n'attend pas. 25 minutes pour vous recentrer.", bgImage: "/images/quote-texture-sable.jpg" },
+        pricing: {
+            options: [
+                { name: "Dos", price: "40€", duration: "25 min" },
+                { name: "Jambes", price: "40€", duration: "25 min" },
+                { name: "Ventre", price: "40€", duration: "25 min" }
+            ],
+            details: "Le soin parfait pour la pause déjeuner ou pour un besoin urgent."
+        },
+        gallery: ['/images/gallery-fast-dos.jpg', '/images/gallery-fast-jambes.jpg', '/images/gallery-fast-ventre.jpg'],
+        fullGallery: [
+            '/images/hero-manafast.jpg', '/images/gallery-fast-dos.jpg', '/images/gallery-fast-jambes.jpg',
+            '/images/gallery-fast-ventre.jpg', '/images/process-fast-bilan.jpg', '/images/process-fast-soin.jpg'
+        ],
+        subServices: []
     },
 };

@@ -1,14 +1,16 @@
 'use client'; 
 
-import { Poppins } from "next/font/google"; 
+import { League_Spartan } from "next/font/google"; 
+import Image from "next/image";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { usePathname } from 'next/navigation'; 
+import SiteBackground from "./components/SiteBackground"; 
 
-const poppins = Poppins({ 
+const leagueSpartan = League_Spartan({
   subsets: ["latin"],
-  weight: ['300', '400', '500', '700'] 
+  weight: ['400', '600', '700', '800']
 });
 
 
@@ -17,7 +19,8 @@ export default function RootLayout({ children }) {
   const isAuthPage = pathname.startsWith('/auth');
   return (
     <html lang="fr">
-      <body className={poppins.className}> 
+      <body className={leagueSpartan.className}> 
+        <SiteBackground />
        <div className="flex flex-col min-h-screen">
            {!isAuthPage && <Navbar />}
           <main className="flex-grow"> 

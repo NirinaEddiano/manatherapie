@@ -26,7 +26,7 @@ const defaultFaqData = [
 ];
 
 const FAQItem = ({ item, isOpen, onClick }) => (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 relative z-[2]">
         <button onClick={onClick} className="w-full text-left py-6 flex justify-between items-center gap-4">
             <span className="text-lg font-semibold text-[#1f2937]">{item.q}</span>
             <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.3 }}>

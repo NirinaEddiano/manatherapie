@@ -111,7 +111,7 @@ export default function CourseDetailPage({ params }) {
                                 <div className="p-6 bg-white">
                                     <p className="text-4xl font-bold mb-4">{course.price}</p>
                                     <div className="space-y-3">
-                                        <button className="w-full text-center block bg-[#C87A5E] text-white py-3 rounded-lg font-bold hover:bg-[#b56b50] transition-colors">Acheter maintenant</button>
+                                        <button className="w-full text-center block bg-[#af4d30] text-white py-3 rounded-lg font-bold hover:bg-[#b56b50] transition-colors">Acheter maintenant</button>
                                         <button className="w-full text-center block border-2 border-[#1f2937] text-[#1f2937] py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">Ajouter au panier</button>
                                     </div>
                                     <p className="text-xs text-center text-gray-500 mt-2">Garantie satisfait ou remboursé 30 jours</p>

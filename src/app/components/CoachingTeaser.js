@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const CoachingTeaser = () => (
-    <section className="relative py-32 bg-[#1f2937] text-white text-center overflow-hidden">
+    <section className="relative py-32 z-[20] bg-[#1f2937] text-white text-center overflow-hidden">
         <Image src="/images/hero-coaching.jpg" alt="Paysage inspirant" fill className="object-cover opacity-20 scale-110"/>
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="relative z-10 container mx-auto px-6">
             <p className="font-semibold text-[#C87A5E] uppercase tracking-wider">Accompagnement Personnalisé</p>

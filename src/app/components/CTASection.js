@@ -41,7 +41,7 @@ const FloatingParticle = () => {
 
 const CTASection = () => {
   return (
-    <section className="relative py-24 bg-[#1f2937] overflow-hidden">
+    <section className="relative z-[20] py-24 bg-[#1f2937] overflow-hidden">
       <Image
         src="/images/cta-background.jpg"
         alt="Texture de fond apaisante"

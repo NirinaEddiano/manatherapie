@@ -1,4 +1,4 @@
-// tailwind.config.js
+
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -8,15 +8,15 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: { // Le mot "extend" est crucial !
+    extend: {
       colors: {
-        'primary-terracotta': '#C87A5E',
+        'primary-terracotta': '#af4d30',
         'accent-rose': '#FBCFE8',
         'dark-text': '#1f2937',
         'light-bg': '#FFFFFF',
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
+        sans: ['League Spartan', 'sans-serif'],
       },
     },
   },

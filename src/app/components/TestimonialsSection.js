@@ -29,7 +29,7 @@ const bottomRowTestimonials = [
 ];
 
 const TestimonialCard = ({ name, service, quote }) => (
-  <div className="flex-shrink-0 w-80 md:w-96 p-6 mx-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+  <div className="flex-shrink-0 z-[20] w-80 md:w-96 p-6 mx-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
     <div className="flex items-center mb-3">
       {[...Array(4)].map((_, i) => <Star key={`fill-${i}`} className="w-5 h-5 text-yellow-400 fill-current" />)}
       <Star className="w-5 h-5 text-yellow-400" />
@@ -37,7 +37,7 @@ const TestimonialCard = ({ name, service, quote }) => (
     <p className="text-gray-600 italic mb-4">"{quote}"</p>
     <div>
       <p className="font-bold text-[#1f2937]">{name}</p>
-      <p className="text-sm text-[#C87A5E]">{service}</p>
+      <p className="text-sm text-[#af4d30]">{service}</p>
     </div>
   </div>
 );
@@ -59,7 +59,7 @@ const TestimonialsSection = () => {
       </div>
 
       <motion.div 
-        className="relative marquee-container"
+        className="relative z-[20] marquee-container"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
