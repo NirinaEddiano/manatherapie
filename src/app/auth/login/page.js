@@ -12,7 +12,7 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <main className="min-h-screen flex items-center justify-center p-6">
+        <main className="relative z-[2]  min-h-screen flex items-center justify-center p-6">
             <div className="w-full max-w-md">
                 <motion.div 
                     className="bg-white rounded-2xl shadow-xl p-8"
