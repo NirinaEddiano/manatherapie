@@ -34,7 +34,7 @@ export default function CourseDetailPage({ params }) {
     return (
         <main>
             {/* --- Section Hero du Cours (inspirée d'Udemy) --- */}
-            <section className="bg-[#1f2937] text-white py-16">
+            <section className="relative z-[2] bg-[#1f2937] text-white py-16">
                 <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                      <Image src={course.image} alt={course.title} width={500} height={300} className="w-full rounded-lg object-cover"/>
                     <div className="lg:col-span-2">
@@ -104,7 +104,7 @@ export default function CourseDetailPage({ params }) {
                     </div>
                     
                     {/* --- Colonne de Droite : Carte d'achat "sticky" --- */}
-                    <div className="relative">
+                    <div className="relative z-[2]">
                         <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="lg:sticky top-28">
                              <div className="rounded-lg shadow-2xl overflow-hidden border border-gray-200">
                                  <Image src={course.image} alt={course.title} width={500} height={300} className="w-full object-cover"/>
@@ -135,7 +135,7 @@ export default function CourseDetailPage({ params }) {
             <section className="py-16 bg-gray-50 border-t border-gray-200">
                  <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold mb-8">Formations similaires qui pourraient vous plaire</h2>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                     <div className="relative z-[2] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {similarCourses.map(c => <SimilarCourseCard course={c} />)}
                      </div>
                  </div>
