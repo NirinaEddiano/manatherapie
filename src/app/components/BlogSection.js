@@ -31,7 +31,7 @@ const BlogSection = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-[#1f2937] mb-2">Inspirations & Conseils</h2>
             <p className="text-lg text-gray-600">Des ressources pour nourrir votre corps et votre esprit.</p>
           </div>
-          <div className="hidden md:flex items-center gap-2 mt-4 md:mt-0">
+          <div className="relative z-[2] hidden md:flex items-center gap-2 mt-4 md:mt-0">
             <button ref={navigationPrevRef} className="p-3 rounded-full bg-white border border-gray-200 text-[#1f2937] hover:bg-[#af4d30] hover:text-white transition-all duration-300">
               <ArrowLeft size={24} />
             </button>

@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const content = {
   title: "Plus qu'une thérapie, une philosophie de vie.",
-  text: "Chez Manatherapie, nous croyons que chaque individu possède en lui les clés de son propre épanouissement. Notre approche unique combine des techniques ancestrales et des méthodes de coaching modernes pour vous guider sur le chemin de l'harmonie intérieure. Nous ne traitons pas seulement les symptômes, nous vous aidons à construire des fondations solides pour une vie plus sereine et équilibrée.",
+  text: "Chez manatherapy, nous croyons que chaque individu possède en lui les clés de son propre épanouissement. Notre approche unique combine des techniques ancestrales et des méthodes de coaching modernes pour vous guider sur le chemin de l'harmonie intérieure. Nous ne traitons pas seulement les symptômes, nous vous aidons à construire des fondations solides pour une vie plus sereine et équilibrée.",
   button1_text: "Notre Mission",
   button1_link: "/mission",
   button2_text: "Prendre Rendez-vous",

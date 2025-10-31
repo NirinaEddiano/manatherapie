@@ -66,7 +66,7 @@ const ContactFormSection = () => {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-center gap-3">
                   <Mail size={18} className="text-[#af4d30]" />
-                  <a href="mailto:Manatherapy.mp@gmail.com" className="hover:text-[#af4d30] transition-colors">Manatherapy.mp@gmail.com</a>
+                  <a href="mailto:Manatherapy.mp@gmail.com" className="hover:text-[#af4d30] transition-colors">manatherapy.mp@gmail.com</a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone size={18} className="text-[#af4d30]" />

@@ -26,7 +26,7 @@ export default function BlogPostPage({ params }) {
             {/* --- Hero de l'Article --- */}
             <section className="relative z-[2] h-[60vh] min-h-[400px] text-white ">
                 <Image src={post.image} alt={post.title} fill className="object-cover "/>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/80 to-black/90"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/80"></div>
 
                 <div className="relative h-full flex flex-col justify-end">
                     <div className="container mx-auto px-6 pb-12">
@@ -71,7 +71,7 @@ export default function BlogPostPage({ params }) {
             
 
             {/* --- Section "Autres Articles" en Carrousel --- */}
-             <section className="py-24 bg-gray-50">
+             <section className="relative z-[2] py-24 bg-gray-50">
                 <div className="container mx-auto px-6">
                     <div className="flex justify-between items-center mb-12">
                         <h2 className="text-3xl font-bold">Continuez votre lecture</h2>
