@@ -2,7 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 
 .swiper-pagination-bullet {
@@ -206,4 +206,15 @@
 }
 .shine-button:hover::before {
     left: 100%;
+}
+
+@keyframes pattern-scroll {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+.animate-pattern-scroll {
+  background-image: url('/images/manatherapy-pattern.jpg');
+  background-size: cover;
+  animation: pattern-scroll 90s linear infinite alternate;
 }

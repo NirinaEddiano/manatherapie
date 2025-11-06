@@ -16,17 +16,17 @@ const leagueSpartan = League_Spartan({
 
 export default function RootLayout({ children }) {
    const pathname = usePathname(); 
-  const isAuthPage = pathname.startsWith('/auth');
+  const isFullLayoutPage = !pathname.startsWith('/auth') && !pathname.startsWith('/compte') && !pathname.startsWith('/admin');
   return (
     <html lang="fr">
       <body className={leagueSpartan.className}> 
         <SiteBackground />
        <div className="flex flex-col min-h-screen">
-           {!isAuthPage && <Navbar />}
+           {isFullLayoutPage && <Navbar />}
           <main className="flex-grow"> 
             {children}
           </main>
-           {!isAuthPage && <Footer />}
+           {isFullLayoutPage && <Footer />}
         </div>
       </body>
     </html>

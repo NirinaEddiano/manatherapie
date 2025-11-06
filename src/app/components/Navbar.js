@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ShoppingCart  } from 'lucide-react';
 
 const soinsSubMenu = [
     { title: "MANAXFACE (Visage)", href: "/soins/manaxface" },
@@ -51,6 +51,8 @@ const Navbar = () => {
   }, []);
 
   const isSoinsActive = pathname.startsWith('/soins');
+
+ 
 
   return (
     <nav className={`fixed w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
@@ -138,6 +140,13 @@ const Navbar = () => {
           >
             S'inscrire
           </a>
+           <Link href="/panier" className={`relative transition-colors duration-300 ${isScrolled ? 'text-gray-600 hover:text-[#af4d30]' : 'text-white hover:text-white/80'}`}>
+                        <ShoppingCart size={24} />
+                        {/* Badge de notification (codé en dur avec "2") */}
+                        <div className="absolute -top-1 -right-2 w-4 h-4 bg-[#af4d30] text-white text-xs font-bold flex items-center justify-center rounded-full">
+                            2
+                        </div>
+                    </Link>
         </div>
 
         <div className="md:hidden">
