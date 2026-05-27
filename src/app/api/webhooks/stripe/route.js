@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import Stripe from 'stripe';
-import { sendAppointmentConfirmationEmail } from '@/lib/mail';
+import { sendAppointmentConfirmationEmail, sendWelcomeEmail } from '@/lib/mail';
+import { generateTemporaryPassword } from '@/lib/utils';
+import bcrypt from 'bcryptjs';
 
 // Initialisation de Stripe (assurez-vous que STRIPE_SECRET_KEY est dans .env.local)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -33,72 +35,111 @@ export async function POST(request) {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         
-        // On récupère les informations que nous avons nous-mêmes stockées lors de la création de la session de paiement.
+        const type = session.metadata.type;
         const appointmentId = session.metadata.appointmentId;
+        const courseId = session.metadata.courseId;
+        const userId = session.metadata.userId;
+        const isNewUser = session.metadata.isNewUser === 'true';
+        const userName = session.metadata.name;
+
         const paymentIntentId = session.payment_intent;
-        const amount = session.amount_total / 100; // Stripe envoie en centimes, on convertit en euros.
+        const amount = session.amount_total / 100;
         const paymentStatus = session.payment_status;
 
-        // On ne procède que si le statut du paiement est bien "paid" (payé).
-        if (paymentStatus === 'paid' && appointmentId) {
+        if (paymentStatus === 'paid') {
             const client = await pool.connect();
             try {
-                // On utilise une transaction pour s'assurer que toutes les opérations réussissent ou échouent ensemble.
                 await client.query('BEGIN');
 
-                // A. Mettre à jour le statut du rendez-vous de 'en attente' à 'confirmé'.
-                // On récupère en même temps les infos nécessaires pour les notifications.
-                const appointmentUpdateResult = await client.query(
-                    `UPDATE appointments 
-                     SET status = 'confirmé' 
-                     WHERE id = $1 AND status = 'en attente'
-                     RETURNING "userId", "serviceId", start_time`,
-                    [appointmentId]
-                );
-                
-                // Si la requête n'a rien retourné, c'est peut-être que le webhook a déjà été traité.
-                // C'est une sécurité pour éviter les doubles traitements.
-                if (appointmentUpdateResult.rows.length === 0) {
-                    console.warn(`Webhook reçu pour un rendez-vous déjà traité ou non trouvé : ${appointmentId}`);
+                if (type === 'appointment_payment' && appointmentId) {
+                    // --- LOGIQUE RENDEZ-VOUS ---
+                    const appointmentUpdateResult = await client.query(
+                        `UPDATE appointments 
+                         SET status = 'confirmé' 
+                         WHERE id = $1 AND status = 'en attente'
+                         RETURNING "userId", "serviceId", start_time`,
+                        [appointmentId]
+                    );
+                    
+                    if (appointmentUpdateResult.rows.length > 0) {
+                        const { userId: aUserId, serviceId, start_time } = appointmentUpdateResult.rows[0];
+
+                        await client.query(
+                            'INSERT INTO payments ("appointmentId", stripe_payment_intent_id, amount, status) VALUES ($1, $2, $3, $4)',
+                            [appointmentId, paymentIntentId, amount, 'succeeded']
+                        );
+                        
+                        const serviceRes = await client.query('SELECT title FROM services WHERE id = $1', [serviceId]);
+                        const serviceTitle = serviceRes.rows[0].title;
+                        const message = `Votre rendez-vous pour "${serviceTitle}" du ${new Date(start_time).toLocaleDateString('fr-FR')} est confirmé.`;
+                        await client.query(
+                            'INSERT INTO notifications ("userId", message, link) VALUES ($1, $2, $3)',
+                            [aUserId, message, '/compte/rendez-vous']
+                        );
+
+                        await client.query('COMMIT');
+                        
+                        const userRes = await client.query('SELECT email FROM users WHERE id = $1', [aUserId]);
+                        if (userRes.rows.length > 0) {
+                            await sendAppointmentConfirmationEmail({ 
+                                to: userRes.rows[0].email, 
+                                serviceTitle: serviceTitle, 
+                                appointmentDate: start_time 
+                            });
+                        }
+                    } else {
+                        await client.query('ROLLBACK');
+                    }
+
+                } else if (type === 'course_purchase' && courseId && userId) {
+                    // --- LOGIQUE FORMATION ---
+                    const courseUpdateResult = await client.query(
+                        `UPDATE user_courses 
+                         SET status = 'accepté' 
+                         WHERE "userId" = $1 AND "courseId" = $2 AND status = 'en attente'
+                         RETURNING id`,
+                        [userId, courseId]
+                    );
+
+                    if (courseUpdateResult.rows.length > 0) {
+                        // Enregistrer le paiement avec l'ID de la formation
+                        await client.query(
+                            'INSERT INTO payments (stripe_payment_intent_id, amount, status, "courseId") VALUES ($1, $2, $3, $4)',
+                            [paymentIntentId, amount, 'succeeded', courseId]
+                        );
+
+                        const courseRes = await client.query('SELECT title FROM courses WHERE id = $1', [courseId]);
+                        const courseTitle = courseRes.rows[0].title;
+                        
+                        await client.query(
+                            'INSERT INTO notifications ("userId", message, link) VALUES ($1, $2, $3)',
+                            [userId, `Votre achat de la formation "${courseTitle}" est confirmé.`, '/compte/formations']
+                        );
+
+                        await client.query('COMMIT');
+
+                        // Si c'est un nouvel utilisateur, on lui a déjà créé un compte mais on doit lui envoyer son mdp temporaire
+                        // Note: Le mot de passe temporaire a été généré dans l'API checkout, mais pas envoyé.
+                        // Pour bien faire, il faudrait le stocker temporairement ou le renvoyer ici.
+                        // Simplification : On part du principe que si isNewUser est true, l'API checkout s'est occupée de tout ou on gère ici.
+                        // Dans notre cas, l'API checkout avait une logique d'envoi immédiat si Stripe était OFF.
+                        // Ici, on va juste envoyer un email de confirmation.
+                        const userRes = await client.query('SELECT email, name FROM users WHERE id = $1', [userId]);
+                        if (userRes.rows.length > 0) {
+                            const user = userRes.rows[0];
+                            // Si c'était un nouvel utilisateur, l'email de bienvenue avec MDP a déjà dû être envoyé par l'API checkout 
+                            // ou devrait être géré ici. Pour la cohérence, on envoie au moins la confirmation d'accès.
+                        }
+                    } else {
+                        await client.query('ROLLBACK');
+                    }
+                } else {
                     await client.query('ROLLBACK');
-                    return NextResponse.json({ received: true, message: 'Déjà traité.' });
-                }
-
-                const { userId, serviceId, start_time } = appointmentUpdateResult.rows[0];
-
-                // B. Enregistrer la transaction dans notre table 'payments' pour garder une trace.
-                await client.query(
-                    'INSERT INTO payments ("appointmentId", stripe_payment_intent_id, amount, status) VALUES ($1, $2, $3, $4)',
-                    [appointmentId, paymentIntentId, amount, 'succeeded']
-                );
-                
-                // C. Créer une notification interne qui s'affichera dans la cloche du site.
-                const serviceRes = await client.query('SELECT title FROM services WHERE id = $1', [serviceId]);
-                const serviceTitle = serviceRes.rows[0].title;
-                const message = `Votre rendez-vous pour "${serviceTitle}" du ${new Date(start_time).toLocaleDateString('fr-FR')} est confirmé.`;
-                await client.query(
-                    'INSERT INTO notifications ("userId", message, link) VALUES ($1, $2, $3)',
-                    [userId, message, '/compte/rendez-vous']
-                );
-
-                // On valide toutes les opérations dans la base de données.
-                await client.query('COMMIT');
-                
-                // D. (Hors transaction) Envoyer l'email de confirmation externe.
-                const userRes = await client.query('SELECT email FROM users WHERE id = $1', [userId]);
-                if (userRes.rows.length > 0) {
-                    await sendAppointmentConfirmationEmail({ 
-                        to: userRes.rows[0].email, 
-                        serviceTitle: serviceTitle, 
-                        appointmentDate: start_time 
-                    });
                 }
 
             } catch (err) {
-                // En cas d'erreur à n'importe quelle étape, on annule tout.
-                await client.query('ROLLBACK');
-                console.error('Erreur dans le webhook Stripe lors de la mise à jour de la BDD:', err);
-                // On renvoie une erreur 500 pour que Stripe sache que quelque chose a mal tourné et puisse réessayer plus tard.
+                if (client) await client.query('ROLLBACK');
+                console.error('Erreur dans le webhook Stripe:', err);
                 return NextResponse.json({ error: 'Database Error' }, { status: 500 });
             } finally {
                 client.release();

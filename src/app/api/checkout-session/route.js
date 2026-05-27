@@ -66,7 +66,8 @@ export async function POST(request) {
             success_url: `${process.env.NEXTAUTH_URL}/compte/rendez-vous?payment=success`,
             cancel_url: `${process.env.NEXTAUTH_URL}/compte/paiement/${appointmentId}?payment=canceled`,
             metadata: {
-                appointmentId: appointmentId, // On passe l'ID du RDV à Stripe
+                appointmentId: appointmentId,
+                type: 'appointment_payment'
             }
         });
 
