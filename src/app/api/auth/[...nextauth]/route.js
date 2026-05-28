@@ -16,8 +16,9 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
       httpOptions: {
-        timeout: 10000,
+        timeout: 30000,
       },
     }),
     CredentialsProvider({
