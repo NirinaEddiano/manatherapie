@@ -68,9 +68,9 @@ export async function PUT(request, { params }) {
         if (whatYoullLearn) { fields.push(`what_you_learn = $${paramIndex++}`); values.push(whatYoullLearn); }
         if (modules) { fields.push(`modules = $${paramIndex++}`); values.push(JSON.stringify(modules)); }
         
-        // --- MODIFICATION 2 : Ajouter la logique pour mettre à jour les URLs si elles sont fournies ---
-        if (imageUrl) { fields.push(`image_url = $${paramIndex++}`); values.push(imageUrl); }
-        if (fileUrl) { fields.push(`file_url = $${paramIndex++}`); values.push(fileUrl); }
+        // --- MODIFICATION 2 : Ajouter la logique pour mettre à jour les URLs si elles sont fournies (ou mises à null) ---
+        if (imageUrl !== undefined) { fields.push(`image_url = $${paramIndex++}`); values.push(imageUrl); }
+        if (fileUrl !== undefined) { fields.push(`file_url = $${paramIndex++}`); values.push(fileUrl); }
 
 
         if (fields.length === 0) {

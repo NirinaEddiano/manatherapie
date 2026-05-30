@@ -13,8 +13,8 @@ export default function FormationDetailPage({ params }) {
     const [error, setError] = useState(null);
 
     // Fonction pour récupérer les données du cours via notre nouvelle API
-    const fetchCourseDetails = useCallback(async () => {
-        setIsLoading(true);
+    const fetchCourseDetails = useCallback(async (silent = false) => {
+        if (!silent) setIsLoading(true);
         setError(null);
         try {
             // On appelle directement la nouvelle API, beaucoup plus efficace !
@@ -31,13 +31,21 @@ export default function FormationDetailPage({ params }) {
         } catch (err) {
             setError(err.message);
         } finally {
-            setIsLoading(false);
+            if (!silent) setIsLoading(false);
         }
     }, [slug]);
 
     useEffect(() => {
         if (slug) { // On s'assure que le slug est disponible avant de lancer le fetch
             fetchCourseDetails();
+
+            // Rafraîchissement silencieux en tâche de fond toutes les 5 secondes
+            const intervalId = setInterval(() => {
+                fetchCourseDetails(true);
+            }, 5000);
+
+            // Nettoyage de l'intervalle lors du démontage du composant
+            return () => clearInterval(intervalId);
         }
     }, [slug, fetchCourseDetails]);
 

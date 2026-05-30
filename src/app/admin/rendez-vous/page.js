@@ -292,7 +292,7 @@ export default function AdminAppointmentsPage() {
 
     const apiUrl = `/api/admin/appointments?search=${debouncedSearchTerm}&status=${statusFilter}`;
     const { data: rawEvents, error, isLoading } = useSWR(apiUrl, fetcher, {
-        refreshInterval: 60000,
+        refreshInterval: 5000,
         revalidateOnFocus: true,
     });
 

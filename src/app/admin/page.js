@@ -56,10 +56,10 @@ export default function AdminDashboard() {
 
         initialLoad();
 
-        // Mettre en place un intervalle pour rafraîchir les données toutes les 30 secondes
+        // Mettre en place un intervalle pour rafraîchir les données toutes les 5 secondes
         const intervalId = setInterval(() => {
             fetchDashboardData(); // On rafraîchit sans montrer le loader principal
-        }, 30000);
+        }, 5000);
 
         // Nettoyer l'intervalle quand le composant est retiré de l'écran
         return () => clearInterval(intervalId);

@@ -27,10 +27,17 @@ const CreateFormationModal = ({ isOpen, setIsOpen, onFormationCreated, courseToE
     const [courseFile, setCourseFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    
+    // États pour suivre si l'utilisateur supprime les fichiers existants
+    const [deleteCurrentImage, setDeleteCurrentImage] = useState(false);
+    const [deleteCurrentFile, setDeleteCurrentFile] = useState(false);
 
     // useEffect pour pré-remplir le formulaire lors de l'ouverture en mode édition
     useEffect(() => {
         if (isOpen) {
+            setDeleteCurrentImage(false);
+            setDeleteCurrentFile(false);
+            
             if (isEditMode && courseToEdit) {
                 // Pré-remplir le formulaire avec les données existantes
                 setFormData({
@@ -82,11 +89,22 @@ const CreateFormationModal = ({ isOpen, setIsOpen, onFormationCreated, courseToE
         setError(null);
 
         try {
-            // Upload des fichiers UNIQUEMENT s'ils ont été sélectionnés
-            const imageUrl = await uploadFile(coverImageFile);
-            const fileUrl = await uploadFile(courseFile);
+            // Upload des fichiers ou marquage de suppression
+            let finalImageUrl = undefined;
+            if (coverImageFile) {
+                finalImageUrl = await uploadFile(coverImageFile);
+            } else if (deleteCurrentImage) {
+                finalImageUrl = null;
+            }
 
-            // En mode création, au moins un fichier est souvent requis, mais on rend ça optionnel pour la mise à jour
+            let finalFileUrl = undefined;
+            if (courseFile) {
+                finalFileUrl = await uploadFile(courseFile);
+            } else if (deleteCurrentFile) {
+                finalFileUrl = null;
+            }
+
+            // En mode création, au moins un fichier est requis
             if (!isEditMode && (!coverImageFile || !courseFile)) {
                  throw new Error("L'image de couverture et le fichier de cours sont obligatoires pour une nouvelle formation.");
             }
@@ -101,9 +119,9 @@ const CreateFormationModal = ({ isOpen, setIsOpen, onFormationCreated, courseToE
                 }).filter(mod => mod.title && mod.duration),
             };
 
-            // Ajouter les URLs des nouveaux fichiers seulement s'ils ont été uploadés
-            if (imageUrl) finalData.imageUrl = imageUrl;
-            if (fileUrl) finalData.fileUrl = fileUrl;
+            // Ajouter les URLs finales (ou null) si elles ont été modifiées ou supprimées
+            if (finalImageUrl !== undefined) finalData.imageUrl = finalImageUrl;
+            if (finalFileUrl !== undefined) finalData.fileUrl = finalFileUrl;
 
             // Déterminer la méthode et l'URL de l'API
             const url = isEditMode ? `/api/admin/formations/${courseToEdit.id}` : '/api/admin/formations';
@@ -136,6 +154,8 @@ const CreateFormationModal = ({ isOpen, setIsOpen, onFormationCreated, courseToE
         setFormData(INITIAL_FORMATION_STATE);
         setCoverImageFile(null);
         setCourseFile(null);
+        setDeleteCurrentImage(false);
+        setDeleteCurrentFile(false);
         setError(null);
         setIsLoading(false);
         setIsOpen(false);
@@ -169,12 +189,50 @@ const CreateFormationModal = ({ isOpen, setIsOpen, onFormationCreated, courseToE
                                 <div>
                                     <label className="text-sm font-semibold">Image de couverture</label>
                                     <input type="file" accept="image/*" onChange={handleCoverImageChange} required={!isEditMode} className="w-full text-sm mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#af4d30]/10 file:text-[#af4d30] hover:file:bg-[#af4d30]/20 cursor-pointer"/>
+                                    {isEditMode && !deleteCurrentImage && courseToEdit?.image_url && (
+                                        <div className="mt-2 flex items-center justify-between p-2 bg-gray-50 border rounded-lg">
+                                            <div className="flex items-center gap-4 min-w-0">
+                                                <div className="relative w-16 h-12 rounded-md overflow-hidden bg-gray-200 shrink-0">
+                                                    <img src={courseToEdit.image_url} alt="Couverture actuelle" className="object-cover w-full h-full" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-[10px] text-gray-500 font-semibold">Image en ligne :</p>
+                                                    <a href={courseToEdit.image_url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#af4d30] hover:underline truncate block">
+                                                        {courseToEdit.image_url.split('/').pop()}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <button type="button" onClick={() => setDeleteCurrentImage(true)} className="p-1.5 text-red-500 hover:bg-red-50 rounded shrink-0" title="Supprimer cette image">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    )}
+                                    {deleteCurrentImage && <p className="text-xs text-red-500 mt-1 font-semibold">L'image de couverture sera supprimée après la sauvegarde.</p>}
                                     {isEditMode && <p className="text-xs text-gray-500 mt-1">Laissez vide pour conserver l'image actuelle.</p>}
                                 </div>
                                 
                                 <div>
                                     <label className="text-sm font-semibold">Fichier du cours ({formData.type === 'video' ? 'Vidéo' : 'PDF/Ebook'})</label>
                                     <input type="file" accept={formData.type === 'video' ? 'video/*' : '.pdf,.epub,.mobi'} onChange={handleCourseFileChange} required={!isEditMode} className="w-full text-sm mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#af4d30]/10 file:text-[#af4d30] hover:file:bg-[#af4d30]/20 cursor-pointer"/>
+                                    {isEditMode && !deleteCurrentFile && courseToEdit?.file_url && (
+                                        <div className="mt-2 flex items-center justify-between p-2 bg-gray-50 border rounded-lg text-xs">
+                                            <div className="flex items-center gap-3 min-w-0 flex-grow">
+                                                <div className="bg-[#af4d30]/10 text-[#af4d30] p-1.5 rounded flex items-center justify-center font-bold">
+                                                    {formData.type === 'video' ? '🎬' : '📄'}
+                                                </div>
+                                                <div className="min-w-0 flex-grow">
+                                                    <p className="text-[10px] text-gray-500 font-semibold">Fichier en ligne :</p>
+                                                    <a href={courseToEdit.file_url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#af4d30] hover:underline truncate block">
+                                                        {courseToEdit.file_url.split('/').pop()}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <button type="button" onClick={() => setDeleteCurrentFile(true)} className="p-1.5 text-red-500 hover:bg-red-50 rounded shrink-0" title="Supprimer ce fichier">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    )}
+                                    {deleteCurrentFile && <p className="text-xs text-red-500 mt-1 font-semibold">Le fichier de cours sera supprimé après la sauvegarde.</p>}
                                     {isEditMode && <p className="text-xs text-gray-500 mt-1">Laissez vide pour conserver le fichier actuel.</p>}
                                 </div>
 
