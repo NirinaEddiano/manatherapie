@@ -8,7 +8,7 @@ async function getBestSellers() {
     const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
-            'SELECT id, slug, title, category, price, image_url FROM formations ORDER BY created_at DESC LIMIT 10'
+            'SELECT id, slug, title, category, price, image_url FROM courses ORDER BY created_at DESC LIMIT 10'
         );
         return rows;
     } catch (error) {
