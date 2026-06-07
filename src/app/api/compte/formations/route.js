@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { getToken } from 'next-auth/jwt';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,

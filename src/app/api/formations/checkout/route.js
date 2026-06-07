@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import Stripe from 'stripe';
 import { generateTemporaryPassword } from '@/lib/utils';
 import { sendWelcomeEmail } from '@/lib/mail'; // Assurez-vous que le chemin est correct
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Nécessaire pour getToken
+import { authOptions } from '@/lib/auth'; // Nécessaire pour getToken
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 

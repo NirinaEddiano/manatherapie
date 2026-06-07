@@ -39,12 +39,19 @@ const SetPasswordPage = () => {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || 'Erreur lors de la mise à jour.');
-            // Force le rafraîchissement de la session pour supprimer needsPassword
-            await update({ needsPassword: false });
-            router.push('/compte');
+
+            try {
+                await Promise.race([
+                    update({ needsPassword: false }),
+                    new Promise(resolve => setTimeout(resolve, 1500))
+                ]);
+            } catch (updateErr) {
+                console.error('Update session warning:', updateErr);
+            }
+
+            window.location.href = '/compte';
         } catch (err) {
             setError(err.message);
-        } finally {
             setLoading(false);
         }
     };

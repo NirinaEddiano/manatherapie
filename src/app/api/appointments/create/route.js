@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { sendAppointmentRequestEmail } from '@/lib/mail'; // On ajoutera cette fonction
 
 const pool = new Pool({
