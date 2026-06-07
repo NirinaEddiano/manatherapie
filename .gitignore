@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# stripe CLI binary
+/stripe
+/stripe.tar.gz
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
