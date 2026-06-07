@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Lock, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { useState } from 'react';
+import { Lock, Eye, EyeOff, KeyRound, ShieldAlert } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -14,8 +14,26 @@ const SetPasswordPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [skipped, setSkipped] = useState(false);
+    const [accessChecked, setAccessChecked] = useState(false);
     const router = useRouter();
-    const { update } = useSession();
+    const { data: session, status, update } = useSession();
+
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (status !== 'authenticated') {
+            router.replace('/auth/login');
+            return;
+        }
+
+        if (!session?.user?.needsPassword) {
+            router.replace('/compte');
+            return;
+        }
+
+        setAccessChecked(true);
+    }, [status, session, router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,7 +60,7 @@ const SetPasswordPage = () => {
 
             try {
                 await Promise.race([
-                    update({ needsPassword: false }),
+                    update({ needsPassword: false, passwordSkipped: false }),
                     new Promise(resolve => setTimeout(resolve, 1500))
                 ]);
             } catch (updateErr) {
@@ -55,6 +73,37 @@ const SetPasswordPage = () => {
             setLoading(false);
         }
     };
+
+    const handleSkip = async () => {
+        setError(null);
+        setLoading(true);
+        try {
+            const res = await fetch('/api/auth/skip-password', { method: 'POST' });
+            if (!res.ok) throw new Error('Erreur lors du passage de l\'étape.');
+
+            try {
+                await Promise.race([
+                    update({ needsPassword: false, passwordSkipped: true }),
+                    new Promise(resolve => setTimeout(resolve, 1500))
+                ]);
+            } catch (updateErr) {
+                console.error('Update session warning:', updateErr);
+            }
+
+            window.location.href = '/compte';
+        } catch (err) {
+            setError(err.message);
+            setLoading(false);
+        }
+    };
+
+    if (!accessChecked) {
+        return (
+            <main className="relative z-[2] min-h-screen flex items-center justify-center p-6">
+                <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin border-[#C87A5E]"></div>
+            </main>
+        );
+    }
 
     return (
         <main className="relative z-[2] min-h-screen flex items-center justify-center p-6">
@@ -130,13 +179,14 @@ const SetPasswordPage = () => {
                             {loading ? 'Enregistrement…' : 'Enregistrer mon mot de passe'}
                         </button>
 
-                        <p className="text-center text-sm text-gray-500">
-                            Vous pouvez aussi{' '}
-                            <Link href="/compte" className="text-[#C87A5E] font-semibold hover:underline">
-                                passer cette étape
-                            </Link>{' '}
-                            et le faire plus tard depuis votre compte.
-                        </p>
+                        <button
+                            type="button"
+                            onClick={handleSkip}
+                            disabled={loading}
+                            className="block w-full text-center text-sm text-gray-500 hover:text-[#C87A5E] hover:underline disabled:opacity-50"
+                        >
+                            Passer cette étape et le faire plus tard
+                        </button>
                     </form>
                 </motion.div>
             </div>

@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
 });
 
 export async function POST(request) {
+    const ip = getClientIp(request);
+    const rl = rateLimit({ key: `verify-email:${ip}`, max: 10, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+        return NextResponse.json({ message: 'Trop de tentatives. Réessayez dans une heure.' }, { status: 429 });
+    }
+
     try {
         const { email, code } = await request.json();
 

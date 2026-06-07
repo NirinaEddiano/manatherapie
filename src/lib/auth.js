@@ -49,11 +49,19 @@ export const authOptions = {
 
         const client = await pool.connect();
         try {
-          const result = await client.query('SELECT * FROM users WHERE email = $1', [credentials.email]);
+          const result = await client.query(
+            'SELECT id, name, email, password_hash, email_verified, failed_login_attempts, locked_until FROM users WHERE email = $1',
+            [credentials.email]
+          );
           const user = result.rows[0];
 
           if (!user || !user.password_hash) {
             throw new Error("Utilisateur non trouvé ou mot de passe non défini.");
+          }
+
+          if (user.locked_until && new Date(user.locked_until) > new Date()) {
+            const minutes = Math.ceil((new Date(user.locked_until) - new Date()) / 60000);
+            throw new Error(`Compte temporairement verrouillé. Réessayez dans ${minutes} minute(s).`);
           }
 
           if (!user.email_verified) {
@@ -63,7 +71,20 @@ export const authOptions = {
           const isValid = await bcrypt.compare(credentials.password, user.password_hash);
 
           if (!isValid) {
+            const newAttempts = (user.failed_login_attempts || 0) + 1;
+            const shouldLock = newAttempts >= 5;
+            await client.query(
+              'UPDATE users SET failed_login_attempts = $1, locked_until = $2 WHERE id = $3',
+              [shouldLock ? 0 : newAttempts, shouldLock ? new Date(Date.now() + 15 * 60 * 1000) : null, user.id]
+            );
             throw new Error("Mot de passe incorrect.");
+          }
+
+          if ((user.failed_login_attempts || 0) > 0) {
+            await client.query(
+              'UPDATE users SET failed_login_attempts = 0, locked_until = NULL WHERE id = $1',
+              [user.id]
+            );
           }
 
           return user;
@@ -142,8 +163,16 @@ export const authOptions = {
         }
       }
 
-      if (trigger === "update" && session?.needsPassword === false) {
-        token.needsPassword = false;
+      if (trigger === "update") {
+        if (session?.needsPassword === false) {
+          token.needsPassword = false;
+        }
+        if (session?.passwordSkipped === true) {
+          token.passwordSkipped = true;
+        }
+        if (session?.passwordSkipped === false) {
+          token.passwordSkipped = false;
+        }
       }
 
       return token;
@@ -153,6 +182,7 @@ export const authOptions = {
       if (token && session.user) {
         session.user.id = token.id;
         session.user.needsPassword = token.needsPassword ?? false;
+        session.user.passwordSkipped = token.passwordSkipped ?? false;
       }
       return session;
     },

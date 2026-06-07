@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from '@/lib/mail';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
@@ -12,6 +13,12 @@ function generateCode() {
 }
 
 export async function POST(request) {
+    const ip = getClientIp(request);
+    const rl = rateLimit({ key: `register:${ip}`, max: 5, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+        return NextResponse.json({ message: 'Trop de tentatives d\'inscription. Réessayez dans une heure.' }, { status: 429 });
+    }
+
     try {
         const { fullName, email, password } = await request.json();
 

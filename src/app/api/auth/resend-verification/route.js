@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { sendVerificationEmail } from '@/lib/mail';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
@@ -11,6 +12,12 @@ function generateCode() {
 }
 
 export async function POST(request) {
+    const ip = getClientIp(request);
+    const rl = rateLimit({ key: `resend-verification:${ip}`, max: 3, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+        return NextResponse.json({ message: 'Trop de demandes. Réessayez dans une heure.' }, { status: 429 });
+    }
+
     try {
         const { email } = await request.json();
 

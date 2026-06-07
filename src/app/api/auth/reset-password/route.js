@@ -2,12 +2,19 @@ import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
 });
 
 export async function POST(request) {
+    const ip = getClientIp(request);
+    const rl = rateLimit({ key: `reset-password:${ip}`, max: 5, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+        return NextResponse.json({ message: 'Trop de tentatives. Réessayez dans une heure.' }, { status: 429 });
+    }
+
     try {
         const { token, password } = await request.json();
         if (!token || !password) {

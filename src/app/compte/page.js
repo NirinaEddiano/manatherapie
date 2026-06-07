@@ -1,10 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, AlertTriangle } from 'lucide-react';
+import { Calendar, Clock, AlertTriangle, KeyRound, X } from 'lucide-react';
 import Link from 'next/link';
 import useSWR from 'swr';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 const LoadingSpinner = () => (
     <div className="flex items-center justify-center p-12">
@@ -20,6 +22,24 @@ const fetcher = url => fetch(url).then(res => {
 export default function DashboardPage() {
 
      const { data, error, isLoading } = useSWR('/api/dashboard', fetcher);
+     const { data: session, update } = useSession();
+     const [bannerDismissed, setBannerDismissed] = useState(false);
+
+     useEffect(() => {
+         if (typeof window !== 'undefined') {
+             setBannerDismissed(sessionStorage.getItem('passwordBannerDismissed') === '1');
+         }
+     }, []);
+
+     const dismissBanner = async () => {
+         setBannerDismissed(true);
+         sessionStorage.setItem('passwordBannerDismissed', '1');
+         if (session?.user?.passwordSkipped) {
+             try {
+                 await update({ passwordSkipped: false });
+             } catch {}
+         }
+     };
 
     if (isLoading) return <LoadingSpinner />;
     if (error) return (
@@ -29,12 +49,44 @@ export default function DashboardPage() {
     );
 
     const { userName, nextAppointment, coursesCount, recentActivity, recentInvoices } = data;
+    const showPasswordBanner = session?.user?.passwordSkipped && !bannerDismissed;
 
     return (
         <div className="min-w-0 w-full overflow-hidden">
              <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl sm:text-3xl font-bold text-[#1f2937] mb-6 sm:mb-8">
                 Bonjour, {userName}!
             </motion.h1>
+
+            {showPasswordBanner && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3"
+                >
+                    <div className="bg-amber-100 p-2 rounded-full shrink-0">
+                        <KeyRound size={20} className="text-amber-700" />
+                    </div>
+                    <div className="flex-1">
+                        <p className="font-semibold text-amber-900">Vous n'avez pas encore défini de mot de passe</p>
+                        <p className="text-sm text-amber-800 mt-1">
+                            Pour pouvoir vous connecter aussi avec votre email, définissez un mot de passe maintenant.
+                        </p>
+                        <Link
+                            href="/auth/set-password"
+                            className="inline-block mt-2 text-sm font-semibold text-amber-900 hover:underline"
+                        >
+                            Définir mon mot de passe →
+                        </Link>
+                    </div>
+                    <button
+                        onClick={dismissBanner}
+                        className="p-1 rounded-full hover:bg-amber-100 text-amber-700"
+                        aria-label="Fermer"
+                    >
+                        <X size={18} />
+                    </button>
+                </motion.div>
+            )}
 
             <div className="relative z-[2]  grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* --- Carte Prochain Rendez-vous --- */}

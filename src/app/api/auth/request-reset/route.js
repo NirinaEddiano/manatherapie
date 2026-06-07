@@ -3,12 +3,19 @@ import { Pool } from 'pg';
 import crypto from 'crypto';
 import { sendPasswordResetEmail } from '@/lib/mail';
 import bcrypt from 'bcryptjs';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
 });
 
 export async function POST(request) {
+    const ip = getClientIp(request);
+    const rl = rateLimit({ key: `request-reset:${ip}`, max: 3, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+        return NextResponse.json({ message: 'Trop de demandes. Réessayez dans une heure.' }, { status: 429 });
+    }
+
     try {
         const { email } = await request.json();
         if (!email) {
