@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { sendCourseStatusEmail } from '@/lib/mail';
+import { verifyAdmin } from '@/lib/adminAuth';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
@@ -11,7 +12,9 @@ const pool = new Pool({
  * @method PUT
  */
 export async function PUT(request, { params }) {
-    
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
 
     const { purchaseId } = await params;
     const { status } = await request.json();

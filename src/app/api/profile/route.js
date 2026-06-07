@@ -13,11 +13,13 @@ export async function GET() {
     const client = await pool.connect();
     try {
         const result = await client.query(
-            'SELECT name, email, phone, address, newsletter_subscribed, reminders_subscribed FROM users WHERE id = $1',
+            `SELECT name, email, phone, address, newsletter_subscribed, reminders_subscribed,
+                    (password_hash IS NOT NULL) as "hasPassword"
+             FROM users WHERE id = $1`,
             [session.user.id]
         );
         if (result.rows.length === 0) return NextResponse.json({ message: "Utilisateur non trouvé" }, { status: 404 });
-        
+
         return NextResponse.json(result.rows[0]);
     } catch (error) {
         console.error("Erreur API GET /api/profile:", error);

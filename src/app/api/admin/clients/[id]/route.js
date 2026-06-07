@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { verifyAdmin } from '@/lib/adminAuth';
 
 const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
-// Protégé par le middleware /api/admin/*
+// Protégé par le middleware /api/admin/* ET vérification inline (défense en profondeur)
 export async function GET(request, { params }) {
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
     const { id } = await params;
     const clientDB = await pool.connect();
     try {

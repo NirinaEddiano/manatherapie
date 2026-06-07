@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
+import { verifyAdmin } from '@/lib/adminAuth';
+
+const ALLOWED_MIME_TYPES = [
+    'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml',
+    'video/mp4', 'video/webm', 'video/quicktime',
+    'application/pdf',
+];
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 /**
  * @description Gère l'upload d'un fichier vers Cloudinary (Sécurisé et Intelligent)
  * @method POST
  */
 export async function POST(request) {
-    
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
 
     try {
         const formData = await request.formData();
@@ -16,8 +26,16 @@ export async function POST(request) {
             return NextResponse.json({ message: "Aucun fichier fourni." }, { status: 400 });
         }
 
-        const fileBuffer = await file.arrayBuffer();
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ message: "Fichier trop volumineux (max 50 Mo)." }, { status: 413 });
+        }
+
         const mimeType = file.type;
+        if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
+            return NextResponse.json({ message: `Type de fichier non autorisé: ${mimeType}` }, { status: 415 });
+        }
+
+        const fileBuffer = await file.arrayBuffer();
         const encoding = 'base64';
         const base64Data = Buffer.from(fileBuffer).toString('base64');
         const fileUri = `data:${mimeType};${encoding},${base64Data}`;

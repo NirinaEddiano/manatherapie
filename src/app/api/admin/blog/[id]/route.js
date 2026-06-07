@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { verifyAdmin } from '@/lib/adminAuth';
+import { sanitizeBlogHtml } from '@/lib/sanitize';
 
 const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
 // GET : Récupérer un article spécifique pour l'édition
 export async function GET(request, { params }) {
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
     const client = await pool.connect();
     try {
         const { rows } = await client.query('SELECT * FROM blog_posts WHERE id = $1', [params.id]);
@@ -17,17 +22,21 @@ export async function GET(request, { params }) {
 
 // PUT : Mettre à jour un article
 export async function PUT(request, { params }) {
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
     const client = await pool.connect();
     try {
         const { title, slug, category, reading_time, image_url, content_html } = await request.json();
-        const excerpt = content_html.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+        const cleanHtml = sanitizeBlogHtml(content_html);
+        const excerpt = cleanHtml.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
 
         const query = `
-            UPDATE blog_posts 
+            UPDATE blog_posts
             SET title=$1, slug=$2, category=$3, reading_time=$4, image_url=$5, content_html=$6, excerpt=$7, updated_at=NOW()
             WHERE id=$8 RETURNING *`;
-        const values = [title, slug, category, reading_time, image_url, content_html, excerpt, params.id];
-        
+        const values = [title, slug, category, reading_time, image_url, cleanHtml, excerpt, params.id];
+
         const { rows } = await client.query(query, values);
         return NextResponse.json(rows[0]);
     } catch (error) {
@@ -43,6 +52,9 @@ export async function PUT(request, { params }) {
 
 // DELETE : Supprimer un article
 export async function DELETE(request, { params }) {
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
     const client = await pool.connect();
     try {
         await client.query('DELETE FROM blog_posts WHERE id = $1', [params.id]);

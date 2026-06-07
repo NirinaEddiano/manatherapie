@@ -1,6 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { verifyAdmin } from '@/lib/adminAuth';
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
@@ -11,7 +12,9 @@ const pool = new Pool({
  * @method GET
  */
 export async function GET(request) {
-    
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get('search') || '';
     const sortBy = searchParams.get('sortBy') || 'created_at_desc';
@@ -68,7 +71,9 @@ export async function GET(request) {
  * @method POST
  */
 export async function POST(request) {
-   
+    const admin = await verifyAdmin();
+    if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
+
 
     try {
         const data = await request.json();

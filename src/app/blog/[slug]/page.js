@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Clock } from 'lucide-react';
 import BlogCarousel from '@/app/components/BlogCarousel';
 import { Pool } from 'pg';
+import { sanitizeBlogHtml } from '@/lib/sanitize';
 
 // Fonction pour récupérer l'article spécifique
 async function getPost(slug) {
@@ -71,10 +72,9 @@ export default async function BlogPostPage({ params }) {
 
             <section className="py-16 sm:py-24 bg-white">
                 <div className="container mx-auto px-6 max-w-3xl">
-                    {/* On utilise dangerouslySetInnerHTML pour afficher le contenu HTML de l'éditeur */}
                     <div
                         className="prose lg:prose-xl max-w-none"
-                        dangerouslySetInnerHTML={{ __html: post.content_html }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content_html) }}
                     />
                 </div>
             </section>

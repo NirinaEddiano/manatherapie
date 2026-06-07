@@ -7,7 +7,7 @@ import { LayoutDashboard, Calendar, Video, User, Bell, LogOut, Menu, ShoppingCar
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion'; // Importer AnimatePresence
 import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
 
 const READ_STORAGE_KEY = 'compte_notification_read_ids';
@@ -121,6 +121,22 @@ const handleLogout = () => {
 
 export default function AccountLayout({ children }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.replace('/auth/login');
+        }
+    }, [status, router]);
+
+    if (status === 'loading' || status === 'unauthenticated') {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin border-[#af4d30]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative z-2  bg-gray-50 min-h-screen">

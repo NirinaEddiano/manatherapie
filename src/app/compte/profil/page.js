@@ -186,8 +186,17 @@ export default function ProfilPage() {
                 <div className="bg-white p-8 rounded-2xl shadow-sm">
                     <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold text-gray-800">Sécurité</h2>
-                        <button onClick={() => setPasswordModalOpen(true)} className="flex items-center gap-2 text-sm font-semibold text-[#af4d30] hover:underline"><Edit size={16}/> Changer le mot de passe</button>
+                        {user.hasPassword ? (
+                            <button onClick={() => setPasswordModalOpen(true)} className="flex items-center gap-2 text-sm font-semibold text-[#af4d30] hover:underline"><Edit size={16}/> Changer le mot de passe</button>
+                        ) : (
+                            <Link href="/auth/set-password" className="flex items-center gap-2 text-sm font-semibold text-[#af4d30] hover:underline"><Edit size={16}/> Définir mon mot de passe</Link>
+                        )}
                     </div>
+                    {!user.hasPassword && (
+                        <p className="text-xs text-gray-500 mt-2">
+                            Votre compte a été créé via Google. Définissez un mot de passe pour pouvoir vous connecter aussi avec votre email.
+                        </p>
+                    )}
                 </div>
                 
                 <div className="bg-white p-8 rounded-2xl shadow-sm">
