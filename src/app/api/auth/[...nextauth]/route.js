@@ -1,5 +1,23 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import dns from "dns";
+
+// Surcharge globale de dns.lookup pour forcer l'IPv4 uniquement dans ce processus API.
+// Cela empêche undici/fetch de tenter des résolutions IPv6 lentes ou bloquées qui provoquent des timeouts (ETIMEDOUT / AggregateError).
+const originalLookup = dns.lookup;
+dns.lookup = function (hostname, options, callback) {
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  } else if (typeof options === 'number') {
+    options = { family: options };
+  } else if (!options) {
+    options = {};
+  }
+  options.family = 4; // Forcer IPv4 uniquement
+  return originalLookup(hostname, options, callback);
+};
+
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";

@@ -106,29 +106,29 @@ async function run() {
 
       await client.query(
         `UPDATE users
-         SET ${nameColumn} = $1, email = $2, password_hash = $3, role = 'ADMIN'
+         SET ${nameColumn} = $1, email = $2, password_hash = $3, role = 'ADMIN', email_verified = TRUE, "emailVerified" = NOW()
          WHERE id = $4`,
         [displayName, email, passwordHash, userId]
       );
-      console.log(`Admin unique mis à jour: ${email} (id=${userId})`);
+      console.log(`Admin unique mis à jour et validé: ${email} (id=${userId})`);
     } else if (targetByEmail.rows.length > 0) {
       userId = targetByEmail.rows[0].id;
       await client.query(
         `UPDATE users
-         SET ${nameColumn} = $1, password_hash = $2, role = 'ADMIN'
+         SET ${nameColumn} = $1, password_hash = $2, role = 'ADMIN', email_verified = TRUE, "emailVerified" = NOW()
          WHERE id = $3`,
         [displayName, passwordHash, userId]
       );
-      console.log(`Admin unique activé: ${email} (id=${userId})`);
+      console.log(`Admin unique activé et validé: ${email} (id=${userId})`);
     } else {
       const created = await client.query(
-        `INSERT INTO users (${nameColumn}, email, password_hash, role)
-         VALUES ($1, $2, $3, 'ADMIN')
+        `INSERT INTO users (${nameColumn}, email, password_hash, role, email_verified, "emailVerified")
+         VALUES ($1, $2, $3, 'ADMIN', TRUE, NOW())
          RETURNING id`,
         [displayName, email, passwordHash]
       );
       userId = created.rows[0].id;
-      console.log(`Admin unique créé: ${email} (id=${userId})`);
+      console.log(`Admin unique créé et validé: ${email} (id=${userId})`);
     }
 
     await client.query('COMMIT');
