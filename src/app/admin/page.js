@@ -56,10 +56,10 @@ export default function AdminDashboard() {
 
         initialLoad();
 
-        // Mettre en place un intervalle pour rafraîchir les données toutes les 30 secondes
+        // Mettre en place un intervalle pour rafraîchir les données toutes les 5 secondes
         const intervalId = setInterval(() => {
             fetchDashboardData(); // On rafraîchit sans montrer le loader principal
-        }, 30000);
+        }, 5000);
 
         // Nettoyer l'intervalle quand le composant est retiré de l'écran
         return () => clearInterval(intervalId);
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
                             </div>
                         )) : <p className="text-gray-500 text-center py-4">Aucun rendez-vous en attente.</p>}
                     </div>
-                    <Link href="/admin/rdv" className="mt-4 inline-block font-semibold text-sm text-[#af4d30] hover:underline">
+                    <Link href="/admin/rendez-vous" className="mt-4 inline-block font-semibold text-sm text-[#af4d30] hover:underline">
                         Voir tous les rendez-vous →
                     </Link>
                 </div>

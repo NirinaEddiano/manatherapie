@@ -11,7 +11,17 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-console.log("erreur...");
+const formatDateTimeFr = (dateValue) => {
+    if (!dateValue) return '';
+    return new Date(dateValue).toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
 
 // Fonction pour envoyer l'email de réinitialisation de mot de passe
 export async function sendPasswordResetEmail({ to, link }) {
@@ -32,10 +42,6 @@ export async function sendPasswordResetEmail({ to, link }) {
             </div>
         `,
     };
-
-    console.log("Tentative d'envoi d'email...");
-    console.log("Utilisateur SMTP:", process.env.EMAIL_SERVER_USER);
-    console.log("Mot de passe SMTP présent:", !!process.env.EMAIL_SERVER_PASSWORD);
 
     try {
         await transporter.sendMail(mailOptions);
@@ -140,5 +146,143 @@ export async function sendWelcomeEmail({ to, name, password }) {
     } catch (error) {
         console.error("Échec de l'envoi de l'email de bienvenue:", error);
         // On ne bloque pas le processus si l'email échoue, mais on logue l'erreur.
+    }
+}
+
+export async function sendAppointmentStatusEmail({ to, clientName, serviceTitle, appointmentDate, status }) {
+    const formattedDate = formatDateTimeFr(appointmentDate);
+    const isConfirmed = status === 'confirmé';
+    const statusLabel = isConfirmed ? 'confirmé' : 'annulé';
+
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: `Mise à jour de votre rendez-vous : ${serviceTitle}`,
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2>Bonjour ${clientName || ''},</h2>
+                <p>Le statut de votre rendez-vous a été mis à jour.</p>
+                <p><strong>Service :</strong> ${serviceTitle}</p>
+                <p><strong>Date et heure :</strong> ${formattedDate}</p>
+                <p><strong>Nouveau statut :</strong> ${statusLabel}</p>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email de statut du rendez-vous:", error);
+    }
+}
+
+export async function sendAppointmentMeetLinkEmail({ to, clientName, serviceTitle, appointmentDate, meetLink }) {
+    const formattedDate = formatDateTimeFr(appointmentDate);
+
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: `Lien de votre session : ${serviceTitle}`,
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2>Bonjour ${clientName || ''},</h2>
+                <p>Le lien de votre session est maintenant disponible.</p>
+                <p><strong>Service :</strong> ${serviceTitle}</p>
+                <p><strong>Date et heure :</strong> ${formattedDate}</p>
+                <a href="${meetLink}" style="background-color: #C87A5E; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                    Rejoindre la session
+                </a>
+                <p style="margin-top: 12px;">Si le bouton ne fonctionne pas, copiez ce lien: ${meetLink}</p>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email du lien de session:", error);
+    }
+}
+
+export async function sendCourseStatusEmail({ to, clientName, courseTitle, status }) {
+    const isAccepted = status === 'accepté';
+    const statusLabel = isAccepted ? 'accepté' : 'refusé';
+
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: `Mise à jour de votre formation : ${courseTitle}`,
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2>Bonjour ${clientName || ''},</h2>
+                <p>Le statut de votre achat de formation a été mis à jour.</p>
+                <p><strong>Formation :</strong> ${courseTitle}</p>
+                <p><strong>Nouveau statut :</strong> ${statusLabel}</p>
+                <p>Vous pouvez consulter votre espace client pour voir les détails.</p>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email de statut de formation:", error);
+    }
+}
+
+export async function sendVerificationEmail({ to, code }) {
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: 'Vérifiez votre adresse email — Manatherapie',
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 480px; margin: 0 auto;">
+                <h2 style="color: #1f2937;">Vérification de votre email</h2>
+                <p>Bonjour,</p>
+                <p>Merci de vous être inscrit sur <strong>Manatherapie</strong>. Pour activer votre compte, veuillez saisir le code ci-dessous sur la page de vérification :</p>
+                <div style="text-align: center; margin: 32px 0;">
+                    <span style="font-size: 36px; font-weight: bold; letter-spacing: 10px; color: #C87A5E; background: #fdf5f2; padding: 16px 24px; border-radius: 10px; border: 2px dashed #C87A5E;">${code}</span>
+                </div>
+                <p style="color: #6b7280; font-size: 14px;">Ce code est valable pendant <strong>15 minutes</strong>. Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.</p>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email de vérification envoyé à:', to);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email de vérification:", error);
+        throw new Error("Impossible d'envoyer l'email de vérification.");
+    }
+}
+
+export async function sendAdminClientNotificationEmail({ to, clientName, message }) {
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: 'Nouveau message de l’administration Manatherapie',
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2>Bonjour ${clientName || ''},</h2>
+                <p>Vous avez reçu un nouveau message de l’administration :</p>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
+                    ${message}
+                </div>
+                <p style="margin-top: 12px;">Vous pouvez aussi retrouver cette notification dans votre espace client.</p>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email de notification admin client:", error);
+        throw new Error("Impossible d'envoyer l'email de notification.");
     }
 }

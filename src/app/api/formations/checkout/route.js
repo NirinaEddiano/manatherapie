@@ -64,7 +64,7 @@ export async function POST(request) {
             const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
             const newUserResult = await client.query(
-                'INSERT INTO users (full_name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id',
+                'INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id',
                 [userDetails.name, userEmail, hashedPassword, 'CLIENT']
             );
             userId = newUserResult.rows[0].id;
@@ -92,8 +92,8 @@ export async function POST(request) {
 
         await client.query('COMMIT'); // On valide la transaction BDD
         
-        // --- SECTION PAIEMENT (PRÊTE POUR STRIPE) ---
-        const USE_STRIPE = false; // <<< METTRE À `true` QUAND STRIPE SERA PRÊT
+        // --- SECTION PAIEMENT (ACTIVÉE POUR STRIPE) ---
+        const USE_STRIPE = true; 
 
         if (USE_STRIPE) {
             const stripeSession = await stripe.checkout.sessions.create({
@@ -109,11 +109,14 @@ export async function POST(request) {
                 mode: 'payment',
                 customer_email: userEmail,
                 success_url: `${process.env.NEXTAUTH_URL}/compte/formations?payment=success`,
-                cancel_url: `${process.env.NEXTAUTH_URL}/academie/${course.slug}?payment=canceled`,
+                cancel_url: `${process.env.NEXTAUTH_URL}/academie/${course.id}?payment=canceled`,
                 metadata: {
-                    userId: userId,
-                    courseId: courseId,
-                    isNewUser: isNewUser.toString()
+                    userId: userId.toString(),
+                    courseId: courseId.toString(),
+                    isNewUser: isNewUser.toString(),
+                    // On garde le format cohérent pour le webhook
+                    type: 'course_purchase',
+                    name: userDetails?.name || session?.name || ''
                 }
             });
             return NextResponse.json({ url: stripeSession.url });

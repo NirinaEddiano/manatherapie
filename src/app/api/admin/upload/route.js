@@ -39,9 +39,9 @@ export async function POST(request) {
         const uploadOptions = {
             folder: 'manatherapy/formations',
             resource_type: resource_type,
-             // Augmenter la limite de taille si nécessaire pour les vidéos (en bytes)
-             // Par défaut, la limite est généreuse, mais on peut la spécifier.
-             // max_file_size: 100000000, // Exemple pour 100MB
+            use_filename: true,
+            unique_filename: true, // Évite les collisions en ajoutant un suffixe unique tout en gardant le nom d'origine
+            filename_override: file.name, // Transmet le nom de fichier original à Cloudinary (requis pour le Base64)
         };
         
         // 3. Envoyer le fichier à Cloudinary avec les options correctes
