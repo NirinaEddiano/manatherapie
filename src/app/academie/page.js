@@ -1,23 +1,21 @@
 
 import Image from 'next/image';
 import CoursesDisplay from './CoursesDisplay'; // On importe notre composant client
+import { Pool } from 'pg';
 
 // Cette fonction s'exécute sur le serveur pour récupérer les données une seule fois.
 async function getCourses() {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
-        const res = await fetch(`${baseUrl}/api/formations`, {
-            // 'no-store' est important pour que les nouvelles formations apparaissent immédiatement.
-            cache: 'no-store', 
-        });
-        if (!res.ok) {
-            console.error("Réponse API non OK:", res.status, res.statusText);
-            throw new Error('Impossible de charger les formations.');
-        }
-        return res.json();
+        const { rows } = await pool.query(
+            'SELECT id, slug, title, category, price, image_url FROM formations ORDER BY created_at DESC'
+        );
+        return rows;
     } catch (error) {
         console.error("Erreur lors du fetch des formations:", error);
-        return []; // Renvoyer un tableau vide est une sécurité pour éviter un crash.
+        return [];
+    } finally {
+        await pool.end();
     }
 }
 

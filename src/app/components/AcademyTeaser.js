@@ -1,26 +1,21 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
+import { Pool } from 'pg';
 
 // Fonction pour récupérer les formations les plus populaires (les 10 dernières créées)
 async function getBestSellers() {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
-        // On appelle notre API avec le paramètre 'limit'
-        const res = await fetch(`${baseUrl}/api/formations?limit=10`, {
-            // Mettre les données en cache pour la performance. 
-            // Elles seront rafraîchies toutes les heures.
-            next: { revalidate: 3600 },
-        });
-
-        if (!res.ok) {
-            console.error("Impossible de charger les formations pour AcademyTeaser");
-            return [];
-        }
-        return res.json();
+        const { rows } = await pool.query(
+            'SELECT id, slug, title, category, price, image_url FROM formations ORDER BY created_at DESC LIMIT 10'
+        );
+        return rows;
     } catch (error) {
-        console.error(error);
+        console.error("Impossible de charger les formations pour AcademyTeaser", error);
         return [];
+    } finally {
+        await pool.end();
     }
 }
 
