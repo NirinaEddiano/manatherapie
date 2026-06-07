@@ -114,7 +114,7 @@ export const authOptions = {
       return true;
     },
 
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user) {
         token.id = user.id;
       }
@@ -137,7 +137,7 @@ export const authOptions = {
       }
 
       // Permettre de réinitialiser needsPassword après que le user a défini son mot de passe
-      if (account === null && token.needsPassword) {
+      if (!account && token.needsPassword) {
         try {
           const client = await pool.connect();
           try {
@@ -149,6 +149,10 @@ export const authOptions = {
         } catch (e) {
           console.error("Erreur refresh needsPassword:", e.message);
         }
+      }
+
+      if (trigger === "update" && session?.needsPassword === false) {
+        token.needsPassword = false;
       }
 
       return token;

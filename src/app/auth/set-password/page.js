@@ -79,6 +79,10 @@ const SetPasswordPage = () => {
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type={showPassword ? 'text' : 'password'}
+                                name="new-password"
+                                autoComplete="new-password"
+                                data-form-type="other"
+                                spellCheck="false"
                                 placeholder="Nouveau mot de passe"
                                 className="w-full text-sm pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#C87A5E] transition-all"
                                 value={password}
@@ -95,6 +99,10 @@ const SetPasswordPage = () => {
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type={showPassword ? 'text' : 'password'}
+                                name="confirm-password"
+                                autoComplete="new-password"
+                                data-form-type="other"
+                                spellCheck="false"
                                 placeholder="Confirmer le mot de passe"
                                 className="w-full text-sm pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#C87A5E] transition-all"
                                 value={confirm}
