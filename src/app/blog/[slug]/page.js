@@ -1,26 +1,38 @@
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
-import BlogCarousel from '@/app/components/BlogCarousel'; // On réutilise notre carrousel
+import BlogCarousel from '@/app/components/BlogCarousel';
+import { Pool } from 'pg';
 
 // Fonction pour récupérer l'article spécifique
 async function getPost(slug) {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
-        const res = await fetch(`${baseUrl}/api/blog/${slug}`, { next: { revalidate: 3600 } });
-        if (!res.ok) return null;
-        return res.json();
-    } catch { return null; }
+        const { rows } = await pool.query(
+            'SELECT id, title, slug, category, reading_time, image_url, content_html, author, published_at, excerpt FROM blog_posts WHERE slug = $1',
+            [slug]
+        );
+        return rows[0] || null;
+    } catch {
+        return null;
+    } finally {
+        await pool.end();
+    }
 }
 
 // Fonction pour récupérer les autres articles pour la section "Continuez votre lecture"
 async function getOtherPosts(currentSlug) {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-     try {
-        const res = await fetch(`${baseUrl}/api/blog`, { next: { revalidate: 3600 } });
-        if (!res.ok) return [];
-        const allPosts = await res.json();
-        return allPosts.filter(p => p.slug !== currentSlug);
-    } catch { return []; }
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
+    try {
+        const { rows } = await pool.query(
+            'SELECT id, title, slug, category, image_url, excerpt, published_at FROM blog_posts WHERE slug <> $1 ORDER BY published_at DESC',
+            [currentSlug]
+        );
+        return rows;
+    } catch {
+        return [];
+    } finally {
+        await pool.end();
+    }
 }
 
 

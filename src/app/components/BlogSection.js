@@ -1,19 +1,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import BlogCarousel from './BlogCarousel'; // On va extraire la logique client
+import { Pool } from 'pg';
 
 async function getLatestPosts() {
-    // On utilise notre nouvelle API avec le paramètre 'limit'
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
-        const res = await fetch(`${baseUrl}/api/blog?limit=6`, {
-            next: { revalidate: 3600 } // Mettre en cache pendant 1 heure
-        });
-        if (!res.ok) return [];
-        return res.json();
+        const { rows } = await pool.query(
+            'SELECT id, title, slug, category, image_url, excerpt, published_at FROM blog_posts ORDER BY published_at DESC LIMIT 6'
+        );
+        return rows;
     } catch (error) {
         console.error("Erreur fetch BlogSection:", error);
         return [];
+    } finally {
+        await pool.end();
     }
 }
 
