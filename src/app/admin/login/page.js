@@ -29,9 +29,8 @@ export default function AdminLoginPage() {
                 throw new Error(data.message || 'Échec de la connexion.');
             }
             
-            // Si la connexion réussit, on redirige vers le tableau de bord admin
-            window.location.href = '/admin'; 
-            // router.refresh(); // N'est pas toujours nécessaire, la redirection suffit souvent
+            router.push('/admin');
+            router.refresh();
 
         } catch (err) {
             setError(err.message);

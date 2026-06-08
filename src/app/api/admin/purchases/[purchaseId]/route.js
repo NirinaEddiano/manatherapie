@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { sendCourseStatusEmail } from '@/lib/mail';
 import { verifyAdmin } from '@/lib/adminAuth';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 /**
  * @description Mettre à jour le statut d'un achat (accepter/refuser).

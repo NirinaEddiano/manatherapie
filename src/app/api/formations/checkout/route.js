@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getToken } from 'next-auth/jwt';
 import bcrypt from 'bcryptjs';
 import Stripe from 'stripe';
@@ -8,10 +8,6 @@ import { sendWelcomeEmail } from '@/lib/mail'; // Assurez-vous que le chemin est
 import { authOptions } from '@/lib/auth'; // Nécessaire pour getToken
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 /**
  * @description Gère la création d'une session de paiement pour une formation.

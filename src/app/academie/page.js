@@ -1,11 +1,10 @@
 
 import Image from 'next/image';
 import CoursesDisplay from './CoursesDisplay'; // On importe notre composant client
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 
 // Cette fonction s'exécute sur le serveur pour récupérer les données une seule fois.
 async function getCourses() {
-    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
             'SELECT id, slug, title, category, price, image_url FROM courses ORDER BY created_at DESC'
@@ -14,8 +13,6 @@ async function getCourses() {
     } catch (error) {
         console.error("Erreur lors du fetch des formations:", error);
         return [];
-    } finally {
-        await pool.end();
     }
 }
 

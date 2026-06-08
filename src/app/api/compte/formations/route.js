@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getToken } from 'next-auth/jwt';
 import { authOptions } from '@/lib/auth';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 /**
  * @description Récupérer la liste des formations achetées par l'utilisateur connecté.

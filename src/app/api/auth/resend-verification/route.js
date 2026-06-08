@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { sendVerificationEmail } from '@/lib/mail';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 function generateCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();

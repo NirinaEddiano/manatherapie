@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { cookies } from 'next/headers';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 const loginSchema = z.object({
     email: z.string().email({ message: "Adresse email invalide." }),

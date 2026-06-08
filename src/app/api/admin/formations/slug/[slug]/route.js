@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { verifyAdmin } from '@/lib/adminAuth';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 /**
  * @description Obtenir les détails d'une formation ADMIN par son SLUG.

@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { verifyAdmin } from '@/lib/adminAuth';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
-
-const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
 // GET : Récupérer un article spécifique pour l'édition
 export async function GET(request, { params }) {

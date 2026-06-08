@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <CartProvider> 
             <Toaster 
-                            position="top-center"
+                            position="bottom-right"
                             reverseOrder={false}
                         />
         <SiteBackground />

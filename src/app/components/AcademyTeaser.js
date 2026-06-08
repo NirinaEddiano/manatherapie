@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 
 // Fonction pour récupérer les formations les plus populaires (les 10 dernières créées)
 async function getBestSellers() {
-    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
             'SELECT id, slug, title, category, price, image_url FROM courses ORDER BY created_at DESC LIMIT 10'
@@ -14,8 +13,6 @@ async function getBestSellers() {
     } catch (error) {
         console.error("Impossible de charger les formations pour AcademyTeaser", error);
         return [];
-    } finally {
-        await pool.end();
     }
 }
 

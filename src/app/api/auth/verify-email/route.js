@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 export async function POST(request) {
     const ip = getClientIp(request);

@@ -1,28 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
 import bcrypt from 'bcryptjs';
-import dns from "dns";
-
-const originalLookup = dns.lookup;
-dns.lookup = function (hostname, options, callback) {
-  if (typeof options === 'function') {
-    callback = options;
-    options = {};
-  } else if (typeof options === 'number') {
-    options = { family: options };
-  } else if (!options) {
-    options = {};
-  }
-  options.family = 4;
-  return originalLookup(hostname, options, callback);
-};
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-});
+import pool from "@/lib/db";
 
 export const authOptions = {
   adapter: PostgresAdapter(pool),

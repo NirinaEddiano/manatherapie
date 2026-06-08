@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { sendAdminClientNotificationEmail } from '@/lib/mail';
 import { verifyAdmin } from '@/lib/adminAuth';
-
-const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
 // Protégé par le middleware /api/admin/* ET vérification inline (défense en profondeur)
 export async function POST(request, { params }) {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import Stripe from 'stripe';
 import { sendAppointmentConfirmationEmail, sendWelcomeEmail } from '@/lib/mail';
 import { generateTemporaryPassword } from '@/lib/utils';
@@ -9,10 +9,6 @@ import bcrypt from 'bcryptjs';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Clé secrète générée par la CLI Stripe (assurez-vous qu'elle est dans .env.local)
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 // La fonction POST qui reçoit les notifications de Stripe
 export async function POST(request) {

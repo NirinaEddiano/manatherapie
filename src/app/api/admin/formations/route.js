@@ -1,11 +1,7 @@
 
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { verifyAdmin } from '@/lib/adminAuth';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 /**
  * @description Lister toutes les formations pour l'interface d'administration (Sécurisé)

@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
+import pool from '@/lib/db';
 
 /**
  * @description Obtenir les détails publics d'un article par son slug.

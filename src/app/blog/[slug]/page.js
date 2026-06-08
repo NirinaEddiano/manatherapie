@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
 import BlogCarousel from '@/app/components/BlogCarousel';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
 
 // Fonction pour récupérer l'article spécifique
 async function getPost(slug) {
-    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
             'SELECT id, title, slug, category, reading_time, image_url, content_html, author, published_at, excerpt FROM blog_posts WHERE slug = $1',
@@ -15,14 +14,11 @@ async function getPost(slug) {
         return rows[0] || null;
     } catch {
         return null;
-    } finally {
-        await pool.end();
     }
 }
 
 // Fonction pour récupérer les autres articles pour la section "Continuez votre lecture"
 async function getOtherPosts(currentSlug) {
-    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
             'SELECT id, title, slug, category, image_url, excerpt, published_at FROM blog_posts WHERE slug <> $1 ORDER BY published_at DESC',
@@ -31,8 +27,6 @@ async function getOtherPosts(currentSlug) {
         return rows;
     } catch {
         return [];
-    } finally {
-        await pool.end();
     }
 }
 

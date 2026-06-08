@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, Fragment, useMemo, useEffect, Suspense, useRef } from 'react';
 import { PlusCircle, Calendar, List, X, AlertTriangle, Video, MapPin, Search, Clock, CalendarIcon, Tag, Loader } from 'lucide-react';
 import { Dialog, Transition, Tab } from '@headlessui/react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { servicesDetails } from '@/app/soins/servicesData';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -189,6 +189,7 @@ const AppointmentDetailModal = ({ event, isOpen, setIsOpen }) => {
     };
 
     const onCancel = async () => {
+        if (!confirm("Êtes-vous sûr de vouloir annuler ce rendez-vous ?")) return;
         const toastId = toast.loading("Annulation en cours...");
         try {
             const res = await fetch('/api/appointments/cancel', {
@@ -252,7 +253,7 @@ const AppointmentDetailModal = ({ event, isOpen, setIsOpen }) => {
 };
 
 
-const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselectedServiceSlug, preselectedType })  => {
+const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselectedServiceSlug, preselectedType, preselectedOption })  => {
     const router = useRouter();
     const safeServices = useMemo(() => {
         const all = Array.isArray(services) ? services : [];
@@ -264,11 +265,13 @@ const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselected
     const [selectedServiceSlug, setSelectedServiceSlug] = useState('');
     const [notes, setNotes] = useState('');
     const [startTime, setStartTime] = useState(new Date());
+    const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 
     useEffect(() => {
         if (isOpen) {
             setStartTime(slot ? new Date(slot.start) : new Date());
             setNotes('');
+            setSelectedOptionIndex(preselectedOption !== null ? Number(preselectedOption) : 0);
             if (safeServices.length > 0 && selectedServiceSlug === '') {
                 if (preselectedServiceSlug && safeServices.some(s => s.slug === preselectedServiceSlug)) {
                     setSelectedServiceSlug(preselectedServiceSlug);
@@ -277,9 +280,11 @@ const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselected
                 }
             }
         }
-    }, [slot, isOpen, safeServices, selectedServiceSlug, preselectedServiceSlug]);
+    }, [slot, isOpen, safeServices, selectedServiceSlug, preselectedServiceSlug, preselectedOption]);
 
     const service = safeServices.find(s => s.slug === selectedServiceSlug);
+    const pricingOptions = service ? servicesDetails[selectedServiceSlug]?.pricing?.options : null;
+    const selectedOption = pricingOptions?.[selectedOptionIndex];
     
      const onConfirm = async (e) => {
         e.preventDefault();
@@ -328,10 +333,29 @@ const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselected
                                 </div>
                                 <div>
                                     <label className="font-semibold text-sm">Type de rendez-vous</label>
-                                    <select value={selectedServiceSlug} onChange={(e) => setSelectedServiceSlug(e.target.value)} required className="w-full mt-1 p-3 border rounded-lg">
+                                    <select value={selectedServiceSlug} onChange={(e) => {
+                                        setSelectedServiceSlug(e.target.value);
+                                        setSelectedOptionIndex(0);
+                                    }} required className="w-full mt-1 p-3 border rounded-lg">
                                         {safeServices.map(s => <option key={s.slug} value={s.slug}>{s.title}</option>)}
                                     </select>
                                 </div>
+                                {pricingOptions && pricingOptions.length > 0 &&
+                                    <div>
+                                        <label className="font-semibold text-sm">Formule</label>
+                                        <select value={selectedOptionIndex} onChange={(e) => setSelectedOptionIndex(Number(e.target.value))} className="w-full mt-1 p-3 border rounded-lg">
+                                            {pricingOptions.map((opt, i) => (
+                                                <option key={i} value={i}>{opt.name} — {opt.price} / {opt.duration}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                }
+                                {selectedOption &&
+                                    <div>
+                                        <label className="font-semibold text-sm">Total</label>
+                                        <input type="text" value={selectedOption.price} readOnly className="w-full mt-1 p-3 border bg-gray-100 rounded-lg"/>
+                                    </div>
+                                }
                                 {service && (service.acompte > 0) &&
                                     <div>
                                         <label className="font-semibold text-sm">Acompte Requis</label>
@@ -390,6 +414,7 @@ function AppointmentsPageContent() {
     const searchParams = useSearchParams();
     const preselectedServiceSlug = searchParams.get('service');
     const preselectedType = searchParams.get('type');
+    const preselectedOption = searchParams.get('option');
     const { data: allEvents, error: eventsError, isLoading: isLoadingEvents } = useSWR('/api/appointments', fetcher);
     const { data: services, error: servicesError, isLoading: isLoadingServices } = useSWR('/api/services', fetcher);
     const router = useRouter(); 
@@ -404,6 +429,24 @@ function AppointmentsPageContent() {
     const [statusFilter, setStatusFilter] = useState('all');
 
     const [calendarView, setCalendarView] = useState('week');
+
+    const paymentSuccess = searchParams.get('payment') === 'success';
+    const sessionId = searchParams.get('session_id');
+
+    useEffect(() => {
+        if (paymentSuccess) {
+            toast.success("Paiement réussi ! Votre rendez-vous est confirmé.", { duration: 6000 });
+            mutate('/api/appointments');
+            if (sessionId) {
+                fetch('/api/appointments/confirm-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId }),
+                }).catch(() => {});
+            }
+            router.replace('/compte/rendez-vous');
+        }
+    }, [paymentSuccess, sessionId, router]);
 
     useEffect(() => {
         if (window.innerWidth < 640) {
@@ -509,7 +552,7 @@ function AppointmentsPageContent() {
     return (
         <div className="relative z-2 min-w-0 w-full overflow-hidden">
             <style>{CALENDAR_STYLES}</style>
-            <Toaster position="bottom-right" />
+            
             <div className="relative z-2 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
                 <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl sm:text-3xl font-bold text-[#1f2937]">
                     Mes Rendez-vous
@@ -645,6 +688,7 @@ function AppointmentsPageContent() {
                     services={services} 
                     preselectedServiceSlug={preselectedServiceSlug}
                     preselectedType={preselectedType}
+                    preselectedOption={preselectedOption}
                  />
             )}
         </div>

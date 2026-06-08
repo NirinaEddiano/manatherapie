@@ -286,7 +286,7 @@ export default function SoinDetailPage() {
                             <p className="text-5xl font-extrabold text-[#1f2937] mb-6">{opt.price}</p>
                             
                             <Link 
-                                href={`/compte/rendez-vous?service=${slug}`} 
+                                href={`/compte/rendez-vous?service=${slug}&option=${i}`} 
                                 className={`w-full block px-6 py-3 rounded-lg font-semibold transition-colors duration-300 ${isPopular ? 'bg-[#af4d30] text-white hover:bg-[#D0482B]' : 'bg-gray-100 text-[#1f2937] hover:bg-gray-200'}`}
                             >
                                 Choisir cette option

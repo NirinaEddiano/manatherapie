@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 
-const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 const ADMIN_JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 async function verifyTokenAndGetAdminId(tokenValue) {

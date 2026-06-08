@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 export async function POST(request) {
     const ip = getClientIp(request);

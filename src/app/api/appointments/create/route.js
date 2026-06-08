@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { sendAppointmentRequestEmail } from '@/lib/mail'; // On ajoutera cette fonction
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 export async function POST(request) {
     const session = await getServerSession(authOptions);

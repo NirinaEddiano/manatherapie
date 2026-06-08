@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import BlogCarousel from './BlogCarousel'; // On va extraire la logique client
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 
 async function getLatestPosts() {
-    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
     try {
         const { rows } = await pool.query(
             'SELECT id, title, slug, category, image_url, excerpt, published_at FROM blog_posts ORDER BY published_at DESC LIMIT 6'
@@ -13,8 +12,6 @@ async function getLatestPosts() {
     } catch (error) {
         console.error("Erreur fetch BlogSection:", error);
         return [];
-    } finally {
-        await pool.end();
     }
 }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Stripe from 'stripe';
@@ -7,10 +7,6 @@ import Stripe from 'stripe';
 const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 export async function POST(request) {
     const session = await getServerSession(authOptions);
@@ -65,7 +61,7 @@ export async function POST(request) {
             }],
             mode: 'payment',
             customer_email: session.user.email,
-            success_url: `${process.env.NEXTAUTH_URL}/compte/rendez-vous?payment=success`,
+            success_url: `${process.env.NEXTAUTH_URL}/compte/rendez-vous?payment=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.NEXTAUTH_URL}/compte/paiement/${appointmentId}?payment=canceled`,
             metadata: {
                 appointmentId: appointmentId,

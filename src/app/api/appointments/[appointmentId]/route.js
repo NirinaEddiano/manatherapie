@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 
 // La signature de la fonction GET ne prend que 'request'
 export async function GET(request) {
@@ -38,12 +34,24 @@ export async function GET(request) {
         `, [appointmentId, userId]);
 
         if (result.rows.length === 0) {
-            return NextResponse.json({ message: "Rendez-vous non trouvé ou déjà payé." }, { status: 404 });
+            const paidCheck = await client.query(`
+                SELECT a.status, s.title as "serviceTitle"
+                FROM appointments a
+                JOIN services s ON a."serviceId" = s.id
+                WHERE a.id = $1 AND a."userId" = $2
+            `, [appointmentId, userId]);
+
+            if (paidCheck.rows.length > 0) {
+                return NextResponse.json({ paid: true, serviceTitle: paidCheck.rows[0].serviceTitle, status: paidCheck.rows[0].status });
+            }
+
+            return NextResponse.json({ message: "Rendez-vous non trouvé." }, { status: 404 });
         }
 
         const data = result.rows[0];
 
         return NextResponse.json({
+            paid: false,
             startTime: data.start_time,
             serviceTitle: data.serviceTitle,
             isAcompte: !!data.acompte && Number(data.acompte) > 0,

@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-
-const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
 // --- FONCTION GET : Pour récupérer les données du profil de l'utilisateur connecté ---
 export async function GET() {
