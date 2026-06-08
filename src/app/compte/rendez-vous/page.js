@@ -5,12 +5,12 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/fr';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, Fragment, useMemo,useEffect } from 'react';
-import { PlusCircle, Calendar, List, X, AlertTriangle, Video, MapPin, Search, Clock,CalendarIcon,Tag,Loader } from 'lucide-react';
+import { useState, Fragment, useMemo, useEffect, Suspense, useRef } from 'react';
+import { PlusCircle, Calendar, List, X, AlertTriangle, Video, MapPin, Search, Clock, CalendarIcon, Tag, Loader } from 'lucide-react';
 import { Dialog, Transition, Tab } from '@headlessui/react';
 import toast, { Toaster } from 'react-hot-toast';
 import { servicesDetails } from '@/app/soins/servicesData';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import useSWR, { mutate } from 'swr';
@@ -252,9 +252,15 @@ const AppointmentDetailModal = ({ event, isOpen, setIsOpen }) => {
 };
 
 
-const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services })  => {
+const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services, preselectedServiceSlug, preselectedType })  => {
     const router = useRouter();
-    const safeServices = useMemo(() => (Array.isArray(services) ? services : []), [services]);
+    const safeServices = useMemo(() => {
+        const all = Array.isArray(services) ? services : [];
+        if (preselectedType) {
+            return all.filter(s => s.type && s.type.startsWith(preselectedType));
+        }
+        return all;
+    }, [services, preselectedType]);
     const [selectedServiceSlug, setSelectedServiceSlug] = useState('');
     const [notes, setNotes] = useState('');
     const [startTime, setStartTime] = useState(new Date());
@@ -262,14 +268,16 @@ const CreateAppointmentModal = ({ slot, isOpen, setIsOpen, services })  => {
     useEffect(() => {
         if (isOpen) {
             setStartTime(slot ? new Date(slot.start) : new Date());
-            setNotes(''); // On réinitialise les notes à chaque ouverture
-
-            // On initialise le service sélectionné seulement si la liste est chargée et qu'aucun service n'est encore choisi
+            setNotes('');
             if (safeServices.length > 0 && selectedServiceSlug === '') {
-                setSelectedServiceSlug(safeServices[0].slug);
+                if (preselectedServiceSlug && safeServices.some(s => s.slug === preselectedServiceSlug)) {
+                    setSelectedServiceSlug(preselectedServiceSlug);
+                } else {
+                    setSelectedServiceSlug(safeServices[0].slug);
+                }
             }
         }
-    }, [slot, isOpen, safeServices, selectedServiceSlug]);
+    }, [slot, isOpen, safeServices, selectedServiceSlug, preselectedServiceSlug]);
 
     const service = safeServices.find(s => s.slug === selectedServiceSlug);
     
@@ -378,7 +386,10 @@ const AppointmentCard = ({ event, onSelect }) => (
     </motion.div>
 );
 
-export default function AppointmentsPage() {
+function AppointmentsPageContent() {
+    const searchParams = useSearchParams();
+    const preselectedServiceSlug = searchParams.get('service');
+    const preselectedType = searchParams.get('type');
     const { data: allEvents, error: eventsError, isLoading: isLoadingEvents } = useSWR('/api/appointments', fetcher);
     const { data: services, error: servicesError, isLoading: isLoadingServices } = useSWR('/api/services', fetcher);
     const router = useRouter(); 
@@ -392,11 +403,12 @@ export default function AppointmentsPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    const [calendarView, setCalendarView] = useState(
-        typeof window !== 'undefined' && window.innerWidth < 640 ? 'month' : 'week'
-    );
+    const [calendarView, setCalendarView] = useState('week');
 
     useEffect(() => {
+        if (window.innerWidth < 640) {
+            setCalendarView('month');
+        }
         const handleResize = () => {
             if (window.innerWidth < 640) {
                 setCalendarView(prev => (prev === 'week' || prev === 'day') ? 'month' : prev);
@@ -412,6 +424,16 @@ export default function AppointmentsPage() {
             router.push('/auth/login?callbackUrl=/compte/rendez-vous');
         }
     }, [allEvents, router]);
+
+    const autoOpenedRef = useRef(false);
+
+    useEffect(() => {
+        if (services && services.length > 0 && (preselectedServiceSlug || preselectedType) && !autoOpenedRef.current) {
+            autoOpenedRef.current = true;
+            setSelectedSlot(null);
+            setCreateModalOpen(true);
+        }
+    }, [services, preselectedServiceSlug, preselectedType]);
 
     const validEvents = useMemo(() => Array.isArray(allEvents) ? allEvents : [], [allEvents]);
 
@@ -621,8 +643,18 @@ export default function AppointmentsPage() {
                     isOpen={isCreateModalOpen} 
                     setIsOpen={setCreateModalOpen} 
                     services={services} 
+                    preselectedServiceSlug={preselectedServiceSlug}
+                    preselectedType={preselectedType}
                  />
             )}
         </div>
+    );
+}
+
+export default function AppointmentsPage() {
+    return (
+        <Suspense fallback={<LoadingSpinner />}>
+            <AppointmentsPageContent />
+        </Suspense>
     );
 }

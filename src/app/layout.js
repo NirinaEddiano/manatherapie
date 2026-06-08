@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
   const isFullLayoutPage = !pathname.startsWith('/auth') && !pathname.startsWith('/compte') && !pathname.startsWith('/admin');
   return (
     <html lang="fr">
-      <body className={leagueSpartan.className}> 
+      <body className={leagueSpartan.className} suppressHydrationWarning> 
         <AuthProvider>
           <CartProvider> 
             <Toaster 
