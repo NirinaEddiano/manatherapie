@@ -32,7 +32,7 @@ async function getOtherPosts(currentSlug) {
 
 
 export default async function BlogPostPage({ params }) {
-    const slug = params.slug; 
+    const { slug } = await params;
     const post = await getPost(slug);
     const otherPosts = await getOtherPosts(slug);
 

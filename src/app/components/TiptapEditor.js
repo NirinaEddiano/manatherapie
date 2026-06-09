@@ -24,13 +24,12 @@ const TiptapEditor = ({ content, onChange }) => {
     extensions: [StarterKit],
     content: content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML()); // On envoie le contenu HTML au parent
+      onChange(editor.getHTML());
     },
-     immediatelyRender: false,
+    immediatelyRender: false,
     editorProps: {
       attributes: {
-        // Applique un style de base au contenu
-        class: 'prose prose-sm sm:prose max-w-none p-4 focus:outline-none h-full',
+        class: 'prose prose-sm sm:prose max-w-none p-4 focus:outline-none min-h-64',
       },
     },
   });
@@ -38,9 +37,7 @@ const TiptapEditor = ({ content, onChange }) => {
   return (
     <div className="border border-gray-200 rounded-lg">
       <MenuBar editor={editor} />
-      <div className="h-64 overflow-y-auto">
-        <EditorContent editor={editor} />
-      </div>
+      <EditorContent editor={editor} />
     </div>
   );
 };

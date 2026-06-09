@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/pg-adapter": "^1.11.1",
     "@headlessui/react": "^2.2.9",
+    "@tailwindcss/typography": "^0.5.20",
     "@tiptap/react": "^3.10.2",
     "@tiptap/starter-kit": "^3.10.2",
     "bcryptjs": "^3.0.3",

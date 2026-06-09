@@ -16,6 +16,7 @@ const BlogEditorModal = ({ isOpen, setIsOpen, onSave, postToEdit }) => {
     const [postData, setPostData] = useState(INITIAL_BLOG_POST_STATE);
     const [content, setContent] = useState('');
     const [imageFile, setImageFile] = useState(null);
+    const [replaceImage, setReplaceImage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     // Pré-remplir le formulaire en mode édition
@@ -33,6 +34,8 @@ const BlogEditorModal = ({ isOpen, setIsOpen, onSave, postToEdit }) => {
                 setPostData(INITIAL_BLOG_POST_STATE);
                 setContent('<p>Commencez à écrire votre article ici...</p>');
             }
+            setImageFile(null);
+            setReplaceImage(false);
         }
     }, [postToEdit, isOpen, isEditMode]);
 
@@ -64,11 +67,13 @@ const BlogEditorModal = ({ isOpen, setIsOpen, onSave, postToEdit }) => {
                 content_html: content,
             };
 
-            // Gérer l'URL de l'image
+            if (isEditMode && replaceImage && !imageUrl) {
+                throw new Error("Veuillez sélectionner une nouvelle image.");
+            }
             if (imageUrl) {
                 finalData.image_url = imageUrl;
             } else if (isEditMode) {
-                finalData.image_url = postToEdit.image_url; // Conserver l'ancienne image
+                finalData.image_url = postToEdit.image_url;
             } else {
                 throw new Error("L'image de couverture est obligatoire pour un nouvel article.");
             }
@@ -103,6 +108,7 @@ const BlogEditorModal = ({ isOpen, setIsOpen, onSave, postToEdit }) => {
         setPostData(INITIAL_BLOG_POST_STATE);
         setContent('');
         setImageFile(null);
+        setReplaceImage(false);
         setIsOpen(false);
     };
 
@@ -129,12 +135,21 @@ const BlogEditorModal = ({ isOpen, setIsOpen, onSave, postToEdit }) => {
                                 </div>
                                 <div>
                                     <label className="text-sm font-semibold">Image de couverture</label>
-                                    <input type="file" onChange={handleImageChange} required={!isEditMode} className="w-full text-sm mt-1 file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-[#af4d30]/10 file:text-[#af4d30] hover:file:bg-[#af4d30]/20 cursor-pointer"/>
-                                    {isEditMode && <p className="text-xs text-gray-500 mt-1">Laissez vide pour conserver l'image actuelle.</p>}
+                                    {isEditMode && postToEdit?.image_url && !replaceImage ? (
+                                        <div className="mt-1">
+                                            <img src={postToEdit.image_url} alt="Couverture actuelle" className="w-40 h-24 object-cover rounded-lg border mb-2" />
+                                            <button type="button" onClick={() => setReplaceImage(true)} className="text-sm text-red-600 hover:underline">Supprimer et remplacer</button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <input type="file" onChange={handleImageChange} required={!isEditMode} className="w-full text-sm mt-1 file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-[#af4d30]/10 file:text-[#af4d30] hover:file:bg-[#af4d30]/20 cursor-pointer"/>
+                                            {isEditMode && <p className="text-xs text-gray-500 mt-1">Sélectionnez une nouvelle image.</p>}
+                                        </>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="text-sm font-semibold mb-1 block">Contenu de l'article</label>
-                                    {isOpen && <TiptapEditor content={content} onChange={setContent} />}
+                                    {isOpen && <TiptapEditor key={postToEdit?.id || 'new'} content={content} onChange={setContent} />}
                                 </div>
                                 <div className="pt-4 flex justify-end gap-4 border-t">
                                     <button type="button" onClick={closeModal} disabled={isLoading} className="px-5 py-2 border rounded-lg font-semibold">Annuler</button>
