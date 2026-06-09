@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { sendAppointmentConfirmationEmail } from '@/lib/mail';
+import { sendAppointmentConfirmationEmail, sendAdminNewAppointmentEmail } from '@/lib/mail';
 import Stripe from 'stripe';
 
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -25,7 +25,7 @@ export async function POST(request) {
         return NextResponse.json({ message: "Stripe non configuré." }, { status: 500 });
     }
 
-    let appointmentId;
+    let appointmentId, clientEmail, paymentIntentId, amount;
     try {
         const stripeSession = await stripe.checkout.sessions.retrieve(sessionId);
         if (stripeSession.payment_status !== 'paid') {
@@ -35,6 +35,9 @@ export async function POST(request) {
         if (!appointmentId) {
             return NextResponse.json({ message: "Session invalide." }, { status: 400 });
         }
+        clientEmail = stripeSession.customer_email || authSession.user.email;
+        paymentIntentId = stripeSession.payment_intent;
+        amount = stripeSession.amount_total / 100;
     } catch (err) {
         console.error("Erreur vérification Stripe:", err);
         return NextResponse.json({ message: "Impossible de vérifier le paiement." }, { status: 500 });
@@ -61,18 +64,46 @@ export async function POST(request) {
         const serviceRes = await client.query('SELECT title FROM services WHERE id = $1', [serviceId]);
         const serviceTitle = serviceRes.rows[0]?.title || 'Service';
 
-        const message = `Votre rendez-vous pour "${serviceTitle}" du ${new Date(start_time).toLocaleDateString('fr-FR')} est confirmé.`;
+        const clientMsg = `Votre rendez-vous pour "${serviceTitle}" du ${new Date(start_time).toLocaleDateString('fr-FR')} est confirmé.`;
         await client.query(
             'INSERT INTO notifications ("userId", message, link) VALUES ($1, $2, $3)',
-            [userId, message, '/compte/rendez-vous']
+            [userId, clientMsg, '/compte/rendez-vous']
         );
+
+        const adminMsg = `Nouveau rendez-vous confirmé : "${serviceTitle}" le ${new Date(start_time).toLocaleDateString('fr-FR')}.`;
+        const adminRes = await client.query('SELECT id FROM users WHERE role = $1', ['ADMIN']);
+        for (const admin of adminRes.rows) {
+            await client.query(
+                'INSERT INTO notifications ("userId", message, link) VALUES ($1, $2, $3)',
+                [admin.id, adminMsg, '/admin/rendez-vous']
+            );
+        }
+
+        if (paymentIntentId) {
+            await client.query(
+                'INSERT INTO payments ("appointmentId", stripe_payment_intent_id, amount, status) VALUES ($1, $2, $3, $4)',
+                [appointmentId, paymentIntentId, amount, 'succeeded']
+            );
+        }
 
         await client.query('COMMIT');
 
-        const userRes = await client.query('SELECT email FROM users WHERE id = $1', [userId]);
+        const userRes = await client.query('SELECT email, name FROM users WHERE id = $1', [userId]);
         if (userRes.rows.length > 0) {
             await sendAppointmentConfirmationEmail({
                 to: userRes.rows[0].email,
+                serviceTitle,
+                appointmentDate: start_time,
+            });
+        }
+
+        const adminEmailRes = await client.query('SELECT email FROM users WHERE role = $1', ['ADMIN']);
+        const clientName = userRes.rows[0]?.name || 'Client';
+        for (const admin of adminEmailRes.rows) {
+            await sendAdminNewAppointmentEmail({
+                to: admin.email,
+                clientName,
+                clientEmail,
                 serviceTitle,
                 appointmentDate: start_time,
             });

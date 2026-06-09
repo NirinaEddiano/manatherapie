@@ -261,6 +261,35 @@ export async function sendVerificationEmail({ to, code }) {
     }
 }
 
+export async function sendAdminNewAppointmentEmail({ to, clientName, serviceTitle, appointmentDate, clientEmail }) {
+    const formattedDate = formatDateTimeFr(appointmentDate);
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject: `Nouveau rendez-vous confirmé : ${serviceTitle}`,
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2>Nouveau rendez-vous confirmé</h2>
+                <p><strong>Client :</strong> ${clientName} (${clientEmail})</p>
+                <p><strong>Service :</strong> ${serviceTitle}</p>
+                <p><strong>Date et heure :</strong> ${formattedDate}</p>
+                <p>Ce rendez-vous est automatiquement confirmé et visible dans votre tableau de bord.</p>
+                <a href="${process.env.NEXTAUTH_URL}/admin/rendez-vous" style="background-color: #C87A5E; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                    Voir dans le tableau de bord
+                </a>
+                <p>Cordialement,<br/>L'équipe Manatherapie</p>
+            </div>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email de notification administrateur envoyé à:', to);
+    } catch (error) {
+        console.error("Échec de l'envoi de l'email de notification admin:", error);
+    }
+}
+
 export async function sendAdminClientNotificationEmail({ to, clientName, message }) {
     const mailOptions = {
         from: process.env.EMAIL_FROM,
