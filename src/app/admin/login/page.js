@@ -4,8 +4,10 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLoginPage() {
+    const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -60,10 +62,13 @@ export default function AdminLoginPage() {
                         <input id="email" name="email" type="email" autoComplete="email" required className="w-full px-4 py-3 border border-gray-200 rounded-lg" placeholder="Adresse e-mail" value={email}
                                onChange={(e) => setEmail(e.target.value)} />
                     </div>
-                    <div>
+                    <div className="relative">
                         <label htmlFor="password" className="sr-only">Mot de passe</label>
-                        <input id="password" name="password" type="password" autoComplete="current-password" required className="w-full px-4 py-3 border border-gray-200 rounded-lg" placeholder="Mot de passe" value={password}
+                        <input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-lg" placeholder="Mot de passe" value={password}
                                onChange={(e) => setPassword(e.target.value)} />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
                     </div>
                     {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                     <div>

@@ -8,9 +8,10 @@ export async function GET(request, { params }) {
     const admin = await verifyAdmin();
     if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
 
+    const { id } = await params;
     const client = await pool.connect();
     try {
-        const { rows } = await client.query('SELECT * FROM blog_posts WHERE id = $1', [params.id]);
+        const { rows } = await client.query('SELECT * FROM blog_posts WHERE id = $1', [id]);
         if (rows.length === 0) return NextResponse.json({ message: "Article non trouvé" }, { status: 404 });
         return NextResponse.json(rows[0]);
     } finally {
@@ -23,6 +24,7 @@ export async function PUT(request, { params }) {
     const admin = await verifyAdmin();
     if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
 
+    const { id } = await params;
     const client = await pool.connect();
     try {
         const { title, slug, category, reading_time, image_url, content_html } = await request.json();
@@ -33,7 +35,7 @@ export async function PUT(request, { params }) {
             UPDATE blog_posts
             SET title=$1, slug=$2, category=$3, reading_time=$4, image_url=$5, content_html=$6, excerpt=$7, updated_at=NOW()
             WHERE id=$8 RETURNING *`;
-        const values = [title, slug, category, reading_time, image_url, cleanHtml, excerpt, params.id];
+        const values = [title, slug, category, reading_time, image_url, cleanHtml, excerpt, id];
 
         const { rows } = await client.query(query, values);
         return NextResponse.json(rows[0]);
@@ -53,9 +55,10 @@ export async function DELETE(request, { params }) {
     const admin = await verifyAdmin();
     if (!admin) return NextResponse.json({ message: 'Non autorisé' }, { status: 401 });
 
+    const { id } = await params;
     const client = await pool.connect();
     try {
-        await client.query('DELETE FROM blog_posts WHERE id = $1', [params.id]);
+        await client.query('DELETE FROM blog_posts WHERE id = $1', [id]);
         return new NextResponse(null, { status: 204 }); // No Content
     } finally {
         client.release();
